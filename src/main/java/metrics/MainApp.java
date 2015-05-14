@@ -24,14 +24,14 @@ package metrics;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainApp {
-	
-	private static final String IP = "127.0.0.1";
-	private static final int PORT = 8125;
-	
+
+    private static final String IP = "127.0.0.1";
+    private static final int PORT = 8125;
+
     public static void main(String[] args) {
 
-        StatsdPublisher client;		
-		
+        StatsdPublisher client;
+
         try {
             client = new StatsdPublisher(IP, PORT);
             final AtomicBoolean running = new AtomicBoolean(true);

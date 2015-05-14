@@ -32,8 +32,11 @@ import uk.co.real_logic.agrona.concurrent.UnsafeBuffer;
 
 public class MetricsCollectorAgrona implements MetricsCollector {
 
-    private static int COUNTER_LABELS_BUFFER_LENGTH = 1024 * 1024;
+    private static int COUNTER_LABELS_BUFFER_LENGTH = 32 * 1024 * 1024;
     private static int COUNTER_VALUES_BUFFER_LENGTH = 1024 * 1024;
+
+    private static final String MONITOR_DIR_NAME = "\\kaazing";
+    private static final String MONITOR_FILE_NAME = "monitor";
 
     private CountersManager countersManager;
     private UnsafeBuffer valuesBuffer;
@@ -43,11 +46,11 @@ public class MetricsCollectorAgrona implements MetricsCollector {
      * Constructor for configuring Agrona
      */
     public MetricsCollectorAgrona() {
-        File tmpDir = new File(IoUtil.tmpDirName() + "agrona", "test");
-        MappedByteBuffer mapNewFile = IoUtil.mapExistingFile(tmpDir, "test");
+        File tmpDir = new File(IoUtil.tmpDirName() + MONITOR_DIR_NAME, MONITOR_FILE_NAME);
+        MappedByteBuffer mapNewFile = IoUtil.mapExistingFile(tmpDir, MONITOR_FILE_NAME);
 
-        labelsBuffer = new UnsafeBuffer(mapNewFile, 0, COUNTER_LABELS_BUFFER_LENGTH);
-        valuesBuffer = new UnsafeBuffer(mapNewFile, COUNTER_LABELS_BUFFER_LENGTH, COUNTER_VALUES_BUFFER_LENGTH);
+        labelsBuffer = new UnsafeBuffer(mapNewFile, 64, COUNTER_LABELS_BUFFER_LENGTH);
+        valuesBuffer = new UnsafeBuffer(mapNewFile, 64 + COUNTER_LABELS_BUFFER_LENGTH, COUNTER_VALUES_BUFFER_LENGTH);
 
         countersManager = new CountersManager(labelsBuffer, valuesBuffer);
     }

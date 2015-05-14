@@ -37,6 +37,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class StatsdPublisher {
 
+    private static final short STATSD_BUFFER_SIZE = 1500;
+
     private ByteBuffer sendBuffer;
 
     private static final Logger log = LogManager.getLogger(StatsdPublisher.class.getName());
@@ -51,9 +53,14 @@ public class StatsdPublisher {
     public StatsdPublisher(InetAddress host, int port) throws IOException {
         _address = new InetSocketAddress(host, port);
         _channel = DatagramChannel.open();
-        setBufferSize((short) 1500);
+        setBufferSize(STATSD_BUFFER_SIZE);
     }
 
+    /**
+     * Sets allocated buffer size to be sent to StatsD
+     *
+     * @param packetBufferSize
+     */
     public synchronized void setBufferSize(short packetBufferSize) {
         if (sendBuffer != null) {
             flush();
@@ -61,6 +68,12 @@ public class StatsdPublisher {
         sendBuffer = ByteBuffer.allocate(packetBufferSize);
     }
 
+    /**
+     * Adds an item to the buffer and calls the flush method
+     *
+     * @param stat
+     * @return
+     */
     public synchronized boolean send(String stat) {
         try {
             final byte[] data = stat.getBytes("utf-8");
@@ -77,6 +90,11 @@ public class StatsdPublisher {
         }
     }
 
+    /**
+     * Flushes the buffer to StatsD
+     *
+     * @return - boolean indicating whether the buffer was flushed
+     */
     private synchronized boolean flush() {
         try {
             final int sizeOfBuffer = sendBuffer.position();
