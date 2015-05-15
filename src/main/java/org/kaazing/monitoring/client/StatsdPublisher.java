@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package metrics;
+package org.kaazing.monitoring.client;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -46,10 +46,23 @@ public class StatsdPublisher {
     private final InetSocketAddress _address;
     private final DatagramChannel _channel;
 
+    /**
+     * Constructor that creates a connection to StatsD 
+     * @param host
+     * @param port
+     * @throws UnknownHostException
+     * @throws IOException
+     */
     public StatsdPublisher(String host, int port) throws UnknownHostException, IOException {
         this(InetAddress.getByName(host), port);
     }
 
+    /**
+     * Constructor that creates a connection to StatsD and sets the buffer size
+     * @param host
+     * @param port
+     * @throws IOException
+     */
     public StatsdPublisher(InetAddress host, int port) throws IOException {
         _address = new InetSocketAddress(host, port);
         _channel = DatagramChannel.open();
@@ -58,7 +71,6 @@ public class StatsdPublisher {
 
     /**
      * Sets allocated buffer size to be sent to StatsD
-     *
      * @param packetBufferSize
      */
     public synchronized void setBufferSize(short packetBufferSize) {
@@ -70,7 +82,6 @@ public class StatsdPublisher {
 
     /**
      * Adds an item to the buffer and calls the flush method
-     *
      * @param stat
      * @return
      */
@@ -92,7 +103,6 @@ public class StatsdPublisher {
 
     /**
      * Flushes the buffer to StatsD
-     *
      * @return - boolean indicating whether the buffer was flushed
      */
     private synchronized boolean flush() {

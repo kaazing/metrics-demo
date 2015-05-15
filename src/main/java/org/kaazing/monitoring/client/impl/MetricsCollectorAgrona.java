@@ -19,12 +19,17 @@
  * under the License.
  */
 
-package metrics;
+package org.kaazing.monitoring.client.impl;
 
 import java.io.File;
 import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.kaazing.monitoring.client.api.Metric;
+import org.kaazing.monitoring.client.api.MetricsCollector;
 
 import uk.co.real_logic.agrona.IoUtil;
 import uk.co.real_logic.agrona.concurrent.CountersManager;
@@ -41,6 +46,8 @@ public class MetricsCollectorAgrona implements MetricsCollector {
     private CountersManager countersManager;
     private UnsafeBuffer valuesBuffer;
     private UnsafeBuffer labelsBuffer;
+
+    private static final Logger log = LogManager.getLogger(MetricsCollectorAgrona.class.getName());
 
     /**
      * Constructor for configuring Agrona
@@ -62,7 +69,7 @@ public class MetricsCollectorAgrona implements MetricsCollector {
 
             final int offset = CountersManager.counterOffset(id);
             final long value = valuesBuffer.getLongVolatile(offset);
-            System.out.format("%3d: %,20d - %s\n", id, value, label);
+            log.debug(String.format("%3d: %,20d - %s", id, value, label));
 
             metrics.add(new MetricAgrona(label, value));
         });

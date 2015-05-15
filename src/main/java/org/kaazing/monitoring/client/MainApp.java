@@ -19,9 +19,13 @@
  * under the License.
  */
 
-package metrics;
+package org.kaazing.monitoring.client;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.kaazing.monitoring.client.api.Metric;
+import org.kaazing.monitoring.client.api.MetricsCollector;
+import org.kaazing.monitoring.client.impl.MetricsCollectorAgrona;
 
 public class MainApp {
 
@@ -36,9 +40,9 @@ public class MainApp {
             client = new StatsdPublisher(IP, PORT);
             final AtomicBoolean running = new AtomicBoolean(true);
 
+            MetricsCollector metricsCollector = new MetricsCollectorAgrona();
             // Gets the list of all metrics and sends it to the StatsD publisher
             while (running.get()) {
-                MetricsCollector metricsCollector = new MetricsCollectorAgrona();
                 for (Metric metric : metricsCollector.getMetrics()) {
                     client.send(metric.formatForStatsD());
                 }

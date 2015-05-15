@@ -19,16 +19,18 @@
  * under the License.
  */
 
-package metrics;
+package org.kaazing.monitoring.client.api;
+
+import java.util.List;
 
 /**
- * This interface represents the abstraction layer for metrics sent to the StatsD client.
+ * This interface is used for collecting metrics
+ * 
  */
-public interface Metric {
+public interface MetricsCollector {
     /**
-     * Returns a String formatted for the StatsD client
-     * StatsD expects metrics to be sent in the format <metricname>:<value>|<type>
-     * @return String
+     * Returns a list with all the collected metrics
+     * @return List<Metric>
      */
-    String formatForStatsD();
+    List<Metric> getMetrics();
 }

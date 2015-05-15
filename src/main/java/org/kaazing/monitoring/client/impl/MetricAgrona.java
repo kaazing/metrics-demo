@@ -19,9 +19,11 @@
  * under the License.
  */
 
-package metrics;
+package org.kaazing.monitoring.client.impl;
 
 import java.util.Locale;
+
+import org.kaazing.monitoring.client.api.Metric;
 
 public class MetricAgrona implements Metric {
 
