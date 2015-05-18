@@ -81,7 +81,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>metrics.MainApp</mainClass>
+							<mainClass>org.kaazing.monitoring.client.MainApp</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

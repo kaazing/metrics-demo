@@ -29,8 +29,8 @@ import org.kaazing.monitoring.client.impl.MetricsCollectorAgrona;
 
 public class MainApp {
 
-    private static final String IP = "127.0.0.1";
-    private static final int PORT = 8125;
+    private static final String IP = "monitoring";
+    private static final int PORT = 10000;
 
     public static void main(String[] args) {
 
