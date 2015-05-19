@@ -40,8 +40,12 @@ public class MetricsCollectorAgrona implements MetricsCollector {
     private static int COUNTER_LABELS_BUFFER_LENGTH = 32 * 1024 * 1024;
     private static int COUNTER_VALUES_BUFFER_LENGTH = 1024 * 1024;
 
-    private static final String MONITOR_DIR_NAME = "\\kaazing";
+    private static final String MONITOR_DIR_NAME = "/kaazing";
     private static final String MONITOR_FILE_NAME = "monitor";
+
+    private static final String LINUX_OS = "Linux";
+    private static final String OS_NAME_SYSTEM_PROPERTY = "os.name";
+    private static final String LINUX_DEV_SHM_DIRECTORY = "/dev/shm";
 
     private CountersManager countersManager;
     private UnsafeBuffer valuesBuffer;
@@ -53,7 +57,11 @@ public class MetricsCollectorAgrona implements MetricsCollector {
      * Constructor for configuring Agrona
      */
     public MetricsCollectorAgrona() {
-        File tmpDir = new File(IoUtil.tmpDirName() + MONITOR_DIR_NAME, MONITOR_FILE_NAME);
+        String prefix = "";
+        if (LINUX_OS.equalsIgnoreCase(System.getProperty(OS_NAME_SYSTEM_PROPERTY))) {
+              prefix = LINUX_DEV_SHM_DIRECTORY;
+        }
+        File tmpDir = new File(prefix + IoUtil.tmpDirName() + MONITOR_DIR_NAME, MONITOR_FILE_NAME);
         MappedByteBuffer mapNewFile = IoUtil.mapExistingFile(tmpDir, MONITOR_FILE_NAME);
 
         labelsBuffer = new UnsafeBuffer(mapNewFile, 64, COUNTER_LABELS_BUFFER_LENGTH);
