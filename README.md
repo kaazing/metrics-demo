@@ -14,3 +14,6 @@ mvn clean install
 
 ## Steps for running this project
 java -jar target/MetricsPublisher-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+
+## Note
+In order for the project to run, the "monitoring" alias must be mapped to a valid IP.
