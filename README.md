@@ -13,4 +13,4 @@ StatsD implementation of metrics collection from Agrona
 mvn clean install
 
 ## Steps for running this project
-java -jar MetricsPublisher-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+java -jar target/MetricsPublisher-0.0.1-SNAPSHOT-jar-with-dependencies.jar
