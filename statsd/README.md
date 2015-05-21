@@ -7,13 +7,13 @@ StatsD implementation of metrics collection from Agrona
 
 ## Minimum requirements for building the project
 * Java Developer Kit (JDK) or Java Runtime Environment (JRE) Java 8 
-* Maven 3.0.5
+* Maven 3.0.5 or above
 
 ## Steps for building this project
 mvn clean install
 
 ## Steps for running this project
-java -jar target/MetricsPublisher-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+java -jar target/MetricsPublisher-develop-SNAPSHOT-jar-with-dependencies.jar
 
 ## Note
 In order for the project to run, the "monitoring" alias must be mapped to a valid IP.
