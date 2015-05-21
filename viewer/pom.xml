@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.kaazing</groupId>
-    <artifactId>example.agrona</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>Agrona reader</name>
-    <description>Sample Agrona reader application for gateway monitoring implementation</description>
+    <artifactId>metrics.viewer</artifactId>
+    <version>develop-SNAPSHOT</version>
+    <name>Metrics Viewer</name>
+    <description>Sample metrics reader application for Gateway monitoring</description>
 
     <dependencies>
         <dependency>
@@ -43,7 +43,7 @@
                 <executions>
                     <execution>
                         <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
