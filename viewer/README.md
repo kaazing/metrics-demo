@@ -1,4 +1,4 @@
-# metrics-viewer
+# metrics.viewer
 
 ## Requirements
 In order to build the project you need to have Maven 3.x installed.
