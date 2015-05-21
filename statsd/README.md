@@ -13,7 +13,7 @@ StatsD implementation of metrics collection from Agrona
 mvn clean install
 
 ## Steps for running this project
-java -jar target/MetricsPublisher-develop-SNAPSHOT-jar-with-dependencies.jar
+java -jar target/metrics.statsd-develop-SNAPSHOT-jar-with-dependencies.jar
 
 ## Note
 In order for the project to run, the "monitoring" alias must be mapped to a valid IP.
