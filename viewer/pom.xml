@@ -6,7 +6,7 @@
     <groupId>org.kaazing</groupId>
     <artifactId>metrics.viewer</artifactId>
     <version>develop-SNAPSHOT</version>
-    <name>Metrics Viewer</name>
+    <name>Kaazing Metrics Viewer</name>
     <description>Sample metrics reader application for Gateway monitoring</description>
 
     <dependencies>

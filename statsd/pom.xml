@@ -7,7 +7,7 @@
 	<version>develop-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Metrics Publisher</name>
+	<name>Kaazing statsd Metrics Publisher</name>
 	<url>https://github.com/kaazing/metrics</url>
 
 	<properties>
