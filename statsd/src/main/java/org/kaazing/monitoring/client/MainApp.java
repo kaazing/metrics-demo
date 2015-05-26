@@ -30,7 +30,7 @@ import org.kaazing.monitoring.client.impl.MetricsCollectorAgrona;
 public class MainApp {
 
     private static final String IP = "monitoring";
-    private static final int PORT = 10000;
+    private static final int PORT = 8125;
 
     public static void main(String[] args) {
 
