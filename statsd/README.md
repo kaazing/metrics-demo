@@ -10,10 +10,10 @@ StatsD implementation of metrics collection from Agrona
 * Maven 3.0.5 or above
 
 ## Steps for building this project
-mvn clean install
+`mvn clean install`
 
 ## Steps for running this project
-java -jar target/metrics.statsd-develop-SNAPSHOT-jar-with-dependencies.jar
+`java -jar target/metrics.statsd-develop-SNAPSHOT-jar-with-dependencies.jar`
 
 ## Note
 In order for the project to run, the "monitoring" alias must be mapped to a valid IP.
