@@ -23,6 +23,7 @@
     </scm>
 
     <modules>
+		<module>reader</module>
         <module>statsd</module>
         <module>viewer</module>
     </modules>

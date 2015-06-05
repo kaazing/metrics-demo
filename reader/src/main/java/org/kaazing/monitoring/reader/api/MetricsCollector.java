@@ -19,13 +19,12 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.client.api;
+package org.kaazing.monitoring.reader.api;
 
 import java.util.List;
 
 /**
  * This interface is used for collecting metrics
- * 
  */
 public interface MetricsCollector {
     /**
@@ -33,4 +32,10 @@ public interface MetricsCollector {
      * @return List<Metric>
      */
     List<Metric> getMetrics();
+
+    /**
+     * Returns true if the initialization was finished without any problem
+     * @return boolean
+     */
+    boolean initialize();
 }

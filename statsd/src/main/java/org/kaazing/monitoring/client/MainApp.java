@@ -21,35 +21,69 @@
 
 package org.kaazing.monitoring.client;
 
+import java.io.IOException;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.kaazing.monitoring.client.api.Metric;
-import org.kaazing.monitoring.client.api.MetricsCollector;
-import org.kaazing.monitoring.client.impl.MetricsCollectorAgrona;
+import org.kaazing.monitoring.reader.MetricsCollectorFactory;
+import org.kaazing.monitoring.reader.api.Metric;
+import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MainApp {
 
-    private static final String IP = "monitoring";
-    private static final int PORT = 8125;
+    private static final int DEFAULT_UPDATE_INTERVAL = 1000;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
 
     public static void main(String[] args) {
 
-        StatsdPublisher client;
+        StatsdPublisher client = null;
+        Configuration config = new Configuration();
+
+        if (!config.loadConfigFile()) {
+            LOGGER.error("There was a problem with the configuration file. Exiting application.");
+            System.exit(1);
+        }
+
+        String hostname = config.get(Configuration.CFG_STATSD_HOST);
+        int port = Integer.parseInt(config.get(Configuration.CFG_STATSD_PORT));
+        int updateInterval =
+                Integer.parseInt(config.get(Configuration.CFG_UPDATE_INTERVAL, Integer.toString(DEFAULT_UPDATE_INTERVAL)));
 
         try {
-            client = new StatsdPublisher(IP, PORT);
-            final AtomicBoolean running = new AtomicBoolean(true);
+            client = new StatsdPublisher(hostname, port);
+        } catch (IOException e) {
+            LOGGER.error(String.format("There was a problem initializing the StatsD publisher. Exiting application.", e));
+            System.exit(1);
+        }
 
-            MetricsCollector metricsCollector = new MetricsCollectorAgrona();
+        final AtomicBoolean running = new AtomicBoolean(true);
+
+        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstance();
+
+        if (metricsCollector == null) {
+            LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
+            System.exit(1);
+        }
+
+        try {
+            // Waits until the metrics file is created
+            while (metricsCollector.initialize() == false) {
+                Thread.sleep(updateInterval);
+            }
+
             // Gets the list of all metrics and sends it to the StatsD publisher
             while (running.get()) {
                 for (Metric metric : metricsCollector.getMetrics()) {
-                    client.send(metric.formatForStatsD());
+                    // c - simple counter for StatsD
+                    client.send(String.format(Locale.ENGLISH, "%s:%s|c", metric.getName(), metric.getValue()));
                 }
 
-                Thread.sleep(1000);
+                Thread.sleep(updateInterval);
             }
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
