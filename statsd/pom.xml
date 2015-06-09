@@ -27,9 +27,9 @@
             <version>1.7.5</version>
         </dependency>
         <dependency>
-        	<groupId>org.kaazing</groupId>
-        	<artifactId>metrics.reader</artifactId>
-        	<version>develop-SNAPSHOT</version>
+            <groupId>org.kaazing</groupId>
+            <artifactId>metrics.reader</artifactId>
+            <version>develop-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

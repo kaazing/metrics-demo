@@ -23,44 +23,44 @@
 -->
 
 <assembly>
-  <id>windows</id>
-  <formats>
-    <format>zip</format>
-  </formats>
-  <includeBaseDirectory>true</includeBaseDirectory>
-  
-  <fileSets>
-    <fileSet>
-      <directory>target</directory>
-      <outputDirectory>lib</outputDirectory>
-	  <includes>
-        <include>*.jar</include>
-      </includes>
-    </fileSet>
-	<fileSet>
-      <directory>src/main/scripts</directory>
-      <outputDirectory>/bin</outputDirectory>
-	  <includes>
-          <include>*.start.bat</include>
-      </includes>
-	  <lineEnding>dos</lineEnding>
-    </fileSet>
-	<fileSet>
-      <directory>src/main/resources</directory>
-      <outputDirectory>/conf</outputDirectory>
-	  <includes>
-          <include>*.properties</include>
-      </includes>
-	  <lineEnding>dos</lineEnding>
-    </fileSet>	
-  </fileSets>
-  
-	<dependencySets>  
-		<dependencySet>  
-			<outputDirectory>lib</outputDirectory>
-			<useProjectArtifact>false</useProjectArtifact>  
-			<scope>runtime</scope>  
-		</dependencySet>  
-	</dependencySets>  
-  
+    <id>windows</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>true</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/scripts</directory>
+            <outputDirectory>/bin</outputDirectory>
+            <includes>
+                <include>*.start.bat</include>
+            </includes>
+            <lineEnding>dos</lineEnding>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/resources</directory>
+            <outputDirectory>/conf</outputDirectory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
+            <lineEnding>dos</lineEnding>
+        </fileSet>
+    </fileSets>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+
 </assembly>

@@ -40,14 +40,14 @@ public class StatsdPublisher {
     private static final short STATSD_BUFFER_SIZE = 1500;
 
     private ByteBuffer sendBuffer;
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(StatsdPublisher.class);
 
     private final InetSocketAddress address;
     private final DatagramChannel channel;
 
     /**
-     * Constructor that creates a connection to StatsD 
+     * Constructor that creates a connection to StatsD
      * @param host
      * @param port
      * @throws UnknownHostException
@@ -95,8 +95,9 @@ public class StatsdPublisher {
             return true;
 
         } catch (IOException e) {
-            LOGGER.error(String.format("Could not send stat %s to host %s:%d", sendBuffer.toString(), address.getHostName(),
-                    address.getPort()), e);
+            LOGGER.error(
+                    String.format("Could not send stat %s to host %s:%d", sendBuffer.toString(), address.getHostName(),
+                            address.getPort()), e);
             return false;
         }
     }
@@ -106,31 +107,32 @@ public class StatsdPublisher {
      * @return - boolean indicating whether the buffer was flushed
      */
     private synchronized boolean flush() {
+        final int sizeOfBuffer = sendBuffer.position();
+
+        if (sizeOfBuffer <= 0) {
+            return false;
+        } // empty buffer
+
         try {
-            final int sizeOfBuffer = sendBuffer.position();
-
-            if (sizeOfBuffer <= 0) {
-                return false;
-            } // empty buffer
-
             // send and reset the buffer
             sendBuffer.flip();
             final int nbSentBytes = channel.send(sendBuffer, address);
             sendBuffer.limit(sendBuffer.capacity());
             sendBuffer.rewind();
 
-            if (sizeOfBuffer == nbSentBytes) {
-                return true;
-            } else {
-                LOGGER.error(String.format("Could not send entirely stat %s to host %s:%d. Only sent %d bytes out of %d bytes",
+            if (sizeOfBuffer != nbSentBytes) {
+                LOGGER.warn(String.format("Could not send entirely stat %s to host %s:%d. Only sent %d bytes out of %d bytes",
                         sendBuffer.toString(), address.getHostName(), address.getPort(), nbSentBytes, sizeOfBuffer));
                 return false;
             }
 
         } catch (IOException e) {
-            LOGGER.error(String.format("Could not send stat %s to host %s:%d", sendBuffer.toString(), address.getHostName(),
-                    address.getPort()), e);
+            LOGGER.error(
+                    String.format("Could not send stat %s to host %s:%d", sendBuffer.toString(), address.getHostName(),
+                            address.getPort()), e);
             return false;
         }
+
+        return true;
     }
 }

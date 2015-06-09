@@ -52,7 +52,12 @@ public class Configuration {
             properties.load(inputStream);
             inputStream.close();
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.error("Exception caught while reading the configuration file: ", e);
+            }
+            else {
+                LOGGER.error("Exception caught while reading the configuration file: ", e.getMessage());
+            }
             return false;
         }
         return true;

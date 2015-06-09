@@ -21,15 +21,18 @@
 
 package org.kaazing.monitoring.client;
 
-import java.io.IOException;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.kaazing.monitoring.reader.MetricsCollectorFactory;
 import org.kaazing.monitoring.reader.api.Metric;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import uk.co.real_logic.agrona.concurrent.SigInt;
 
 public class MainApp {
 
@@ -39,7 +42,8 @@ public class MainApp {
 
     public static void main(String[] args) {
 
-        StatsdPublisher client = null;
+        int exitCode = 0;
+
         Configuration config = new Configuration();
 
         if (!config.loadConfigFile()) {
@@ -52,15 +56,6 @@ public class MainApp {
         int updateInterval =
                 Integer.parseInt(config.get(Configuration.CFG_UPDATE_INTERVAL, Integer.toString(DEFAULT_UPDATE_INTERVAL)));
 
-        try {
-            client = new StatsdPublisher(hostname, port);
-        } catch (IOException e) {
-            LOGGER.error(String.format("There was a problem initializing the StatsD publisher. Exiting application.", e));
-            System.exit(1);
-        }
-
-        final AtomicBoolean running = new AtomicBoolean(true);
-
         MetricsCollector metricsCollector = MetricsCollectorFactory.getInstance();
 
         if (metricsCollector == null) {
@@ -68,24 +63,43 @@ public class MainApp {
             System.exit(1);
         }
 
-        try {
-            // Waits until the metrics file is created
-            while (metricsCollector.initialize() == false) {
+        // Waits until the metrics file is created by the producer (e.g. this app is started and then waits for a
+        // gateway to start and create the file)
+        while (!metricsCollector.initialize()) {
+            try {
                 Thread.sleep(updateInterval);
-            }
-
-            // Gets the list of all metrics and sends it to the StatsD publisher
-            while (running.get()) {
-                for (Metric metric : metricsCollector.getMetrics()) {
-                    // c - simple counter for StatsD
-                    client.send(String.format(Locale.ENGLISH, "%s:%s|c", metric.getName(), metric.getValue()));
+            } catch (InterruptedException e) {
+                LOGGER.debug("An InterruptedException was caught while trying to initialize metricsCollector: ", e);
+                if (!metricsCollector.initialize()) {
+                    System.exit(1);
                 }
-
-                Thread.sleep(updateInterval);
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
 
+        ScheduledExecutorService taskExecutor = Executors.newScheduledThreadPool(1);
+        SigInt.register(() -> taskExecutor.shutdown());
+
+        try {
+            final StatsdPublisher client = new StatsdPublisher(hostname, port);
+
+            taskExecutor.scheduleAtFixedRate(() -> {
+                // Gets the list of all metrics and sends it to the StatsD publisher
+                    for (Metric metric : metricsCollector.getMetrics()) {
+                        // c - simple counter for StatsD
+                        client.send(String.format(Locale.ENGLISH, "%s:%s|c", metric.getName(), metric.getValue()));
+                    }
+                }, 0, updateInterval, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            LOGGER.error("There was a problem initializing the StatsD publisher. Exiting application.", e);
+            exitCode = 1;
+            taskExecutor.shutdown();
+        }
+
+        try {
+            taskExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            LOGGER.debug("An InterruptedException was caught while waiting termination of the taskExecutor: ", e);
+        }
+        System.exit(exitCode);
     }
 }

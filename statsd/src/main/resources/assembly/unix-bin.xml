@@ -23,44 +23,44 @@
 -->
 
 <assembly>
-  <id>unix</id>
-  <formats>
-    <format>tar.gz</format>
-  </formats>
-  <includeBaseDirectory>true</includeBaseDirectory>
-  
-  <fileSets>
-    <fileSet>
-      <directory>target</directory>
-      <outputDirectory>lib</outputDirectory>
-	  <includes>
-        <include>*.jar</include>
-      </includes>
-    </fileSet>
-	<fileSet>
-      <directory>src/main/scripts</directory>
-      <outputDirectory>/bin</outputDirectory>
-	  <includes>
-          <include>*.start</include>
-      </includes>
-      <lineEnding>unix</lineEnding>
-      <fileMode>0755</fileMode>
-    </fileSet>
-	<fileSet>
-      <directory>src/main/resources</directory>
-      <outputDirectory>/conf</outputDirectory>
-	  <includes>
-          <include>*.properties</include>
-      </includes>
-    </fileSet>	
-  </fileSets>
-  
-	<dependencySets>  
-		<dependencySet>  
-			<outputDirectory>lib</outputDirectory>
-			<useProjectArtifact>false</useProjectArtifact>  
-			<scope>runtime</scope>  
-		</dependencySet>  
-	</dependencySets>  
-  
+    <id>unix</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <includeBaseDirectory>true</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/scripts</directory>
+            <outputDirectory>/bin</outputDirectory>
+            <includes>
+                <include>*.start</include>
+            </includes>
+            <lineEnding>unix</lineEnding>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/resources</directory>
+            <outputDirectory>/conf</outputDirectory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+
 </assembly>
