@@ -13,7 +13,19 @@ StatsD implementation of metrics collection from Agrona
 `mvn clean install`
 
 ## Steps for running this project
-`java -jar target/metrics.statsd-develop-SNAPSHOT-jar-with-dependencies.jar`
+0. `cd target`
+1. Unpack the appropriate distribution
+
+   Mac/Linux: `tar -xvf metrics.statsd-develop-SNAPSHOT-unix.tar.gz`
+
+   Windows: `unzip metrics.statsd-develop-SNAPSHOT-windows.zip`
+2. Start the StatsD publisher 
+
+   `cd metrics.statsd-develop-SNAPSHOT/bin`
+
+   Mac/Linux: `./metrics.statsd.start`
+
+   Windows: `metrics.statsd.start.bat`
 
 ## Note
 In order for the project to run, the "monitoring" alias must be mapped to a valid IP.

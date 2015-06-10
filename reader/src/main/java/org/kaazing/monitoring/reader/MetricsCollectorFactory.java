@@ -26,10 +26,17 @@ import org.kaazing.monitoring.reader.impl.MetricsCollectorAgrona;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Factory class that returns a MetricsCollector instance
+ */
 public class MetricsCollectorFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorFactory.class);
 
+    /**
+     * Initializes a MetricCollector instance
+     * @return MetricsCollectorAgrona
+     */
     public static MetricsCollector getInstance() {
         Configuration config = new Configuration();
 

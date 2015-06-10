@@ -28,6 +28,9 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Class for getting StatsD configuration values
+ */
 public class Configuration {
 
     public static final String CFG_STATSD_PORT = "metrics.publisher.statsd.port";
@@ -39,6 +42,10 @@ public class Configuration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
+    /**
+     * Method that loads the configuration file
+     * @return boolean (false if the file is not loaded properly)
+     */
     public boolean loadConfigFile() {
         properties = new Properties();
         InputStream inputStream = null;
@@ -64,12 +71,22 @@ public class Configuration {
         return true;
     }
 
-    public String get(String value) {
-        return properties.getProperty(value);
+    /**
+     * Returns the value for the given property name
+     * @param name
+     * @return String
+     */
+    public String get(String name) {
+        return properties.getProperty(name);
     }
 
-    public String get(String value, String defaultValue) {
-        return properties.getProperty(value, defaultValue);
+    /**
+     * Returns the value for the given property name; in case the property doesn't exist, it returns the default value
+     * @param name
+     * @return String
+     */
+    public String get(String name, String defaultValue) {
+        return properties.getProperty(name, defaultValue);
     }
 
 }
