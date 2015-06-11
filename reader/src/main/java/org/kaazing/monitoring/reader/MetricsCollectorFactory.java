@@ -19,26 +19,32 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.client.impl;
+package org.kaazing.monitoring.reader;
 
-import java.util.Locale;
+import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.impl.MetricsCollectorAgrona;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.kaazing.monitoring.client.api.Metric;
+/**
+ * Factory class that returns a MetricsCollector instance
+ */
+public class MetricsCollectorFactory {
 
-public class MetricAgrona implements Metric {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorFactory.class);
 
-    private String name;
-    private long value;
+    /**
+     * Initializes a MetricCollector instance
+     * @return MetricsCollectorAgrona
+     */
+    public static MetricsCollector getInstance() {
+        Configuration config = new Configuration();
 
-    public MetricAgrona(String name, long value) {
-        this.name = name;
-        this.value = value;
+        if (!config.loadConfigFile()) {
+            LOGGER.error("There was a problem with the configuration file. Exiting application.");
+            return null;
+        }
+
+        return new MetricsCollectorAgrona(config);
     }
-
-    @Override
-    public String formatForStatsD() {
-        // c - is a simple counter
-        return String.format(Locale.ENGLISH, "%s:%s|c", name, value);
-    }
-
 }

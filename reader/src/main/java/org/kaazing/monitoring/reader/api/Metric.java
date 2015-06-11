@@ -19,16 +19,22 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.client.api;
+package org.kaazing.monitoring.reader.api;
 
 /**
- * This interface represents the abstraction layer for metrics sent to the StatsD client.
+ * This interface represents the abstraction layer for metrics.
  */
 public interface Metric {
     /**
-     * Returns a String formatted for the StatsD client
-     * StatsD expects metrics to be sent in the format <metricname>:<value>|<type>
+     * Returns the metric's name
      * @return String
      */
-    String formatForStatsD();
+    String getName();
+
+    /**
+     * Returns the metric's value
+     * @return long
+     */
+    long getValue();
+
 }
