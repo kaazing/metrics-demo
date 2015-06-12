@@ -1,5 +1,4 @@
-FROM kaazing/unstable-gateway:develop-SNAPSHOT
-#FROM kaazing/gateway:latest
+FROM kaazing/gateway:latest
 
 RUN mkdir /kaazing-metrics
 ADD viewer/target/metrics.viewer-develop-SNAPSHOT-jar-with-dependencies.jar /kaazing-metrics/
