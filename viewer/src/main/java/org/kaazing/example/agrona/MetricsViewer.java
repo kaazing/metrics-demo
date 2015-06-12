@@ -1,58 +1,49 @@
 package org.kaazing.example.agrona;
 
-import java.io.File;
-import java.nio.MappedByteBuffer;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import uk.co.real_logic.agrona.IoUtil;
-import uk.co.real_logic.agrona.concurrent.CountersManager;
+import org.kaazing.monitoring.reader.MetricsCollectorFactory;
+import org.kaazing.monitoring.reader.api.MetricsCollector;
+
 import uk.co.real_logic.agrona.concurrent.SigInt;
-import uk.co.real_logic.agrona.concurrent.UnsafeBuffer;
 
 public class MetricsViewer {
 
-    private static int COUNTER_LABELS_BUFFER_LENGTH = 32 * 1024 * 1024;
-    private static int COUNTER_VALUES_BUFFER_LENGTH = 1024 * 1024;
-    private static final String LINUX_OS = "Linux";
-    private static final String OS_NAME_SYSTEM_PROPERTY = "os.name";
-    private static final String LINUX_DEV_SHM_DIRECTORY = "/dev/shm";
-	
+    private static final int UPDATE_INTERVAL = 1000;
 
     public static void main(String[] args) throws InterruptedException {
-        String prefix = "";
-        if (LINUX_OS.equalsIgnoreCase(System.getProperty(OS_NAME_SYSTEM_PROPERTY))) {
-              prefix = LINUX_DEV_SHM_DIRECTORY;
+
+        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstance();
+
+        if (metricsCollector == null) {
+            System.out.println("There was a problem initializing the metrics reader. Exiting application.");
+            System.exit(1);
         }
-        File tmpDir = new File(prefix + IoUtil.tmpDirName() + "/kaazing", "monitor");
-        MappedByteBuffer mapNewFile = IoUtil.mapExistingFile(tmpDir, "monitor");
 
-        UnsafeBuffer labelsBuffer = new UnsafeBuffer(mapNewFile, 64, COUNTER_LABELS_BUFFER_LENGTH);
-        UnsafeBuffer valuesBuffer =
-                new UnsafeBuffer(mapNewFile, 64 + COUNTER_LABELS_BUFFER_LENGTH, COUNTER_VALUES_BUFFER_LENGTH);
+        // Waits until the metrics file is created by the producer (e.g. this app is started and then waits for a
+        // gateway to start and create the file)
+        while (!metricsCollector.initialize()) {
+            Thread.sleep(UPDATE_INTERVAL);
+        }
 
-        CountersManager countersManager = new CountersManager(labelsBuffer, valuesBuffer);
+        ScheduledExecutorService taskExecutor = Executors.newScheduledThreadPool(1);
+        SigInt.register(() -> taskExecutor.shutdown());
 
-        final AtomicBoolean running = new AtomicBoolean(true);
-        SigInt.register(() -> running.set(false));
-
-        while (running.get()) {
+        taskExecutor.scheduleAtFixedRate(() -> {
             System.out.println("Agrona counters:");
             System.out.format("%1$tH:%1$tM:%1$tS - Gateway monitor\n", new Date());
             System.out.println("=========================");
             System.out.println("Counter id: Counter value - Counter name");
 
-            countersManager.forEach((id, label) -> {
-                final int offset = CountersManager.counterOffset(id);
-                final long value = valuesBuffer.getLongVolatile(offset);
-
-                System.out.format("%3d: %,20d - %s\n", id, value, label);
-            });
+            metricsCollector.getMetrics();
 
             System.out.println("");
+        }, 0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
 
-            Thread.sleep(1000);
-        }
+        taskExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
     }
 
 }
