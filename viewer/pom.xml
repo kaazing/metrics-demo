@@ -11,9 +11,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>uk.co.real-logic</groupId>
-            <artifactId>Agrona</artifactId>
-            <version>0.3.1</version>
+            <groupId>org.kaazing</groupId>
+            <artifactId>metrics.reader</artifactId>
+            <version>develop-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
