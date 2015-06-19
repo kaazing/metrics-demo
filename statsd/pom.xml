@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.kaazing</groupId>
             <artifactId>metrics.reader</artifactId>
-            <version>develop-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
