@@ -10,3 +10,8 @@ This contains three different projects:
 # Minimum requirements for building the project
 * Java Developer Kit (JDK) 8 
 * Maven 3.0.5 or above
+
+# Running this project
+Once the gateway is running, the metrics.viewer can be run to view the monitoring counters exposed by the gateway or metrics.statsd can be used to push the monitoring counters to a statsd server.
+
+Please check the metrics.viewer and metrics.reader components for instructions on how to run them.
