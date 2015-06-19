@@ -8,5 +8,5 @@ This contains three different projects:
 * metrics.reader - common library used by statsd and viewer to read data from Agrona
 
 # Minimum requirements for building the project
-* Java Developer Kit (JDK) or Java Runtime Environment (JRE) Java 8 
+* Java Developer Kit (JDK) 8 
 * Maven 3.0.5 or above
