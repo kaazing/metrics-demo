@@ -58,7 +58,7 @@ public class MetricsCollectorAgrona implements MetricsCollector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorAgrona.class);
 
-    public MetricsCollectorAgrona(Configuration config) {
+    public MetricsCollectorAgrona(Configuration config, String gatewayId) {
 
         String prefix = "";
         if (LINUX_OS.equalsIgnoreCase(System.getProperty(OS_NAME_SYSTEM_PROPERTY))) {
@@ -67,7 +67,7 @@ public class MetricsCollectorAgrona implements MetricsCollector {
 
         String dirName = config.get(Configuration.CFG_AGRONA_MONITORING_DIR);
 
-        fileName = config.get(Configuration.CFG_AGRONA_MONITORING_FILE);
+        fileName = config.get(Configuration.CFG_AGRONA_MONITORING_FILE) + gatewayId;
         tmpDir = new File(prefix + IoUtil.tmpDirName() + dirName, fileName);
     }
 

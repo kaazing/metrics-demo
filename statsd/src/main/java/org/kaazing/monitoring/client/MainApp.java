@@ -42,6 +42,11 @@ public class MainApp {
 
     public static void main(String[] args) {
 
+       if (args.length == 0) {
+           LOGGER.error("Please provide a gateway identifier for the StatsD publisher. Exiting application.");
+           System.exit(1);
+       }
+
         int exitCode = 0;
 
         Configuration config = new Configuration();
@@ -56,7 +61,7 @@ public class MainApp {
         int updateInterval =
                 Integer.parseInt(config.get(Configuration.CFG_UPDATE_INTERVAL, Integer.toString(DEFAULT_UPDATE_INTERVAL)));
 
-        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstance();
+        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstance(args[0]);
 
         if (metricsCollector == null) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");

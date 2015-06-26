@@ -35,9 +35,10 @@ public class MetricsCollectorFactory {
 
     /**
      * Initializes a MetricCollector instance
+     * @param gatewayId
      * @return MetricsCollectorAgrona
      */
-    public static MetricsCollector getInstance() {
+    public static MetricsCollector getInstance(String gatewayId) {
         Configuration config = new Configuration();
 
         if (!config.loadConfigFile()) {
@@ -45,6 +46,6 @@ public class MetricsCollectorFactory {
             return null;
         }
 
-        return new MetricsCollectorAgrona(config);
+        return new MetricsCollectorAgrona(config, gatewayId);
     }
 }

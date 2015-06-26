@@ -16,7 +16,7 @@ public class MetricsViewer {
 
     public static void main(String[] args) throws InterruptedException {
 
-        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstance();
+        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstance(args[0]);
 
         if (metricsCollector == null) {
             System.out.println("There was a problem initializing the metrics reader. Exiting application.");

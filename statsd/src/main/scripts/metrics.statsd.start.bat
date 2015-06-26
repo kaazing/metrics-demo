@@ -1,1 +1,1 @@
-java -XX:+HeapDumpOnOutOfMemoryError -jar ../lib/metrics.statsd-develop-SNAPSHOT.jar
+java -XX:+HeapDumpOnOutOfMemoryError -jar ../lib/metrics.statsd-develop-SNAPSHOT.jar %1
