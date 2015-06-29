@@ -33,7 +33,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.kaazing.example.agrona.MetricsViewer</mainClass>
+                            <mainClass>org.kaazing.monitoring.agrona.viewer.MetricsViewer</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

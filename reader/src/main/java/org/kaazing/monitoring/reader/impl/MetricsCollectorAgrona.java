@@ -29,6 +29,8 @@ import java.util.List;
 import org.kaazing.monitoring.reader.Configuration;
 import org.kaazing.monitoring.reader.api.Metric;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.files.location.MonitoringFolderAgrona;
+import org.kaazing.monitoring.reader.files.location.impl.MonitoringFolderAgronaImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,10 +45,6 @@ public class MetricsCollectorAgrona implements MetricsCollector {
 
     private static int METADATA_BUFFER_LENGTH = 64;
 
-    private static final String LINUX_OS = "Linux";
-    private static final String OS_NAME_SYSTEM_PROPERTY = "os.name";
-    private static final String LINUX_DEV_SHM_DIRECTORY = "/dev/shm";
-
     private CountersManager countersManager;
     private UnsafeBuffer valuesBuffer;
     private UnsafeBuffer labelsBuffer;
@@ -54,21 +52,29 @@ public class MetricsCollectorAgrona implements MetricsCollector {
     private boolean initialized = false;
 
     private String fileName;
+    private MonitoringFolderAgrona monitoringFolder;
     private File tmpDir;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorAgrona.class);
 
+    /**
+     * Constructor creating the metrics collector based on config and gateway id
+     * @param config
+     * @param gatewayId
+     */
     public MetricsCollectorAgrona(Configuration config, String gatewayId) {
+        this(config.get(Configuration.CFG_AGRONA_MONITORING_FILE) + gatewayId);
+    }
 
-        String prefix = "";
-        if (LINUX_OS.equalsIgnoreCase(System.getProperty(OS_NAME_SYSTEM_PROPERTY))) {
-            prefix = LINUX_DEV_SHM_DIRECTORY;
-        }
-
-        String dirName = config.get(Configuration.CFG_AGRONA_MONITORING_DIR);
-
-        fileName = config.get(Configuration.CFG_AGRONA_MONITORING_FILE) + gatewayId;
-        tmpDir = new File(prefix + IoUtil.tmpDirName() + dirName, fileName);
+    /**
+     * Constructor creating the metrics collector based on file name and config
+     * @param fileName
+     * @param config
+     */
+    public MetricsCollectorAgrona(String fileName) {
+        monitoringFolder = new MonitoringFolderAgronaImpl();
+        this.fileName = fileName;
+        tmpDir = new File(monitoringFolder.getMonitoringDir(), this.fileName);
     }
 
     @Override
@@ -106,7 +112,7 @@ public class MetricsCollectorAgrona implements MetricsCollector {
 
                 final int offset = CountersManager.counterOffset(id);
                 final long value = valuesBuffer.getLongVolatile(offset);
-                LOGGER.debug(String.format("%3d: %,10d - %s", id, value, label));
+                LOGGER.debug(String.format("Identifier (%s, %3d): %,10d - %s", fileName, id, value, label));
 
                 metrics.add(new MetricImpl(label, value));
             });

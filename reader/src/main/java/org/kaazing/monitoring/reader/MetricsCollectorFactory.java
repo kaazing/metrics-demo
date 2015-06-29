@@ -32,20 +32,28 @@ import org.slf4j.LoggerFactory;
 public class MetricsCollectorFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorFactory.class);
+    private static final Configuration config = new Configuration();
 
     /**
-     * Initializes a MetricCollector instance
+     * Initializes a MetricCollector instance for gateway instance
      * @param gatewayId
      * @return MetricsCollectorAgrona
      */
-    public static MetricsCollector getInstance(String gatewayId) {
-        Configuration config = new Configuration();
-
+    public static MetricsCollector getInstanceForGateway(String gatewayId) {
         if (!config.loadConfigFile()) {
             LOGGER.error("There was a problem with the configuration file. Exiting application.");
             return null;
         }
 
         return new MetricsCollectorAgrona(config, gatewayId);
+    }
+
+    /**
+     * Initializes a MetricCollector instance for monitoring file
+     * @param fileName
+     * @return MetricsCollectorAgrona
+     */
+    public static MetricsCollector getInstanceForMonitoringFile(String fileName) {
+        return new MetricsCollectorAgrona(fileName);
     }
 }

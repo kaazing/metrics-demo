@@ -61,7 +61,7 @@ public class MainApp {
         int updateInterval =
                 Integer.parseInt(config.get(Configuration.CFG_UPDATE_INTERVAL, Integer.toString(DEFAULT_UPDATE_INTERVAL)));
 
-        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstance(args[0]);
+        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstanceForGateway(args[0]);
 
         if (metricsCollector == null) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
