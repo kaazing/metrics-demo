@@ -21,37 +21,40 @@
 
 package org.kaazing.monitoring.reader.impl;
 
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kaazing.monitoring.reader.api.Metric;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.api.Message;
+import org.kaazing.monitoring.reader.api.MessagesCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MetricsCollectorAgrona implements MetricsCollector {
+public class MessagesCollectorAgrona implements MessagesCollector {
 
-    private CountersManagerEx countersManager;
+    private StringsManager stringsManager;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorAgrona.class);
+    private static final ByteOrder NATIVE_BYTE_ORDER = ByteOrder.nativeOrder();
 
-    public MetricsCollectorAgrona(CountersManagerEx countersManager) {
-        this.countersManager = countersManager;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessagesCollectorAgrona.class);
+
+    public MessagesCollectorAgrona(StringsManager stringsManager) {
+        this.stringsManager = stringsManager;
     }
 
     @Override
-    public List<Metric> getMetrics() {
-        List<Metric> metrics = new ArrayList<Metric>();
+    public List<Message> getMessages() {
+        List<Message> messages = new ArrayList<Message>();
 
-        countersManager.forEach((id, label) -> {
+        stringsManager.forEach((id, label) -> {
 
-            final long value = countersManager.getLongValueForId(id);
-            LOGGER.debug(String.format("%3d: %,10d - %s", id, value, label));
+            final String value = stringsManager.getStringValueUTF8(id, NATIVE_BYTE_ORDER);
+            LOGGER.debug(String.format("%3d: %s - %s", id, value, label));
 
-            metrics.add(new MetricImpl(label, value));
+            messages.add(new MessageImpl(label, value));
         });
 
-        return metrics;
+        return messages;
     }
 
 }

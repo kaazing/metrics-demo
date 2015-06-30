@@ -21,37 +21,26 @@
 
 package org.kaazing.monitoring.reader.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.kaazing.monitoring.reader.api.Message;
 
-import org.kaazing.monitoring.reader.api.Metric;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public class MessageImpl implements Message {
 
-public class MetricsCollectorAgrona implements MetricsCollector {
+    private String name;
+    private String value;
 
-    private CountersManagerEx countersManager;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorAgrona.class);
-
-    public MetricsCollectorAgrona(CountersManagerEx countersManager) {
-        this.countersManager = countersManager;
+    public MessageImpl(String name, String value) {
+        this.name = name;
+        this.value = value;
     }
 
     @Override
-    public List<Metric> getMetrics() {
-        List<Metric> metrics = new ArrayList<Metric>();
+    public String getName() {
+        return name;
+    }
 
-        countersManager.forEach((id, label) -> {
-
-            final long value = countersManager.getLongValueForId(id);
-            LOGGER.debug(String.format("%3d: %,10d - %s", id, value, label));
-
-            metrics.add(new MetricImpl(label, value));
-        });
-
-        return metrics;
+    @Override
+    public String getValue() {
+        return value;
     }
 
 }

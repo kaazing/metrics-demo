@@ -21,17 +21,20 @@
 
 package org.kaazing.monitoring.reader.api;
 
-import java.util.List;
-
 /**
- * This interface is used for collecting metrics
+ * This interface represents the abstraction layer for String messages.
  */
-public interface MetricsCollector {
+public interface Message {
+    /**
+     * Returns the message name
+     * @return String
+     */
+    String getName();
 
     /**
-     * Returns a list with all the collected metrics
-     * @return List<Metric>
+     * Returns the message value
+     * @return long
      */
-    List<Metric> getMetrics();
+    String getValue();
 
 }

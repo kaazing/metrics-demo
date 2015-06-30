@@ -19,32 +19,17 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader;
+package org.kaazing.monitoring.reader.api;
 
-import org.kaazing.monitoring.reader.api.MetricsCollector;
-import org.kaazing.monitoring.reader.impl.MetricsCollectorAgrona;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 /**
- * Factory class that returns a MetricsCollector instance
+ * This interface is used for collecting messages
  */
-public class MetricsCollectorFactory {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorFactory.class);
-
+public interface MessagesCollector {
     /**
-     * Initializes a MetricCollector instance
-     * @return MetricsCollectorAgrona
+     * Returns a list with all the collected messages
+     * @return List<Message>
      */
-    public static MetricsCollector getInstance() {
-        Configuration config = new Configuration();
-
-        if (!config.loadConfigFile()) {
-            LOGGER.error("There was a problem with the configuration file. Exiting application.");
-            return null;
-        }
-
-        return new MetricsCollectorAgrona(config);
-    }
+    List<Message> getMessages();
 }
