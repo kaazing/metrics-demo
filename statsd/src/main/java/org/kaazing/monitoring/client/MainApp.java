@@ -27,7 +27,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.kaazing.monitoring.reader.CollectorFactory;
-import org.kaazing.monitoring.reader.api.MessagesCollector;
 import org.kaazing.monitoring.reader.api.Metric;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
 import org.kaazing.monitoring.reader.impl.MetricsReaderException;
@@ -78,9 +77,8 @@ public class MainApp {
         }
 
         MetricsCollector metricsCollector = collectorFactory.getMetricsCollector();
-        MessagesCollector messagesCollector = collectorFactory.getMessagesCollector();
 
-        if (metricsCollector == null || messagesCollector == null) {
+        if (metricsCollector == null) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
             System.exit(1);
         }
@@ -97,7 +95,6 @@ public class MainApp {
                         // c - simple counter for StatsD
                         client.send(String.format(Locale.ENGLISH, "%s:%s|c", metric.getName(), metric.getValue()));
                     }
-                    messagesCollector.getMessages();
                 }, 0, updateInterval, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             LOGGER.error("There was a problem initializing the StatsD publisher. Exiting application.", e);

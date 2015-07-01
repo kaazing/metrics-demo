@@ -5,8 +5,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.kaazing.monitoring.reader.MetricsCollectorFactory;
+import org.kaazing.monitoring.reader.CollectorFactory;
+import org.kaazing.monitoring.reader.api.MessagesCollector;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.impl.MetricsReaderException;
 
 import uk.co.real_logic.agrona.concurrent.SigInt;
 
@@ -16,17 +18,24 @@ public class MetricsViewer {
 
     public static void main(String[] args) throws InterruptedException {
 
-        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstance();
-
-        if (metricsCollector == null) {
-            System.out.println("There was a problem initializing the metrics reader. Exiting application.");
-            System.exit(1);
-        }
+        CollectorFactory collectorFactory = new CollectorFactory();
 
         // Waits until the metrics file is created by the producer (e.g. this app is started and then waits for a
         // gateway to start and create the file)
-        while (!metricsCollector.initialize()) {
-            Thread.sleep(UPDATE_INTERVAL);
+        try {
+            while (!collectorFactory.initialize()) {
+                Thread.sleep(UPDATE_INTERVAL);
+            }
+        } catch (MetricsReaderException e) {
+            e.printStackTrace();
+        }
+
+        MetricsCollector metricsCollector = collectorFactory.getMetricsCollector();
+        MessagesCollector messagesCollector = collectorFactory.getMessagesCollector();
+
+        if (metricsCollector == null || messagesCollector == null) {
+            System.out.println("There was a problem initializing the metrics reader. Exiting application.");
+            System.exit(1);
         }
 
         ScheduledExecutorService taskExecutor = Executors.newScheduledThreadPool(1);
@@ -39,6 +48,10 @@ public class MetricsViewer {
             System.out.println("Counter id: Counter value - Counter name");
 
             metricsCollector.getMetrics();
+
+            System.out.println("---------------------");
+            System.out.println("Message id: Message value - Message name");
+            messagesCollector.getMessages();
 
             System.out.println("");
         }, 0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
