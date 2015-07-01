@@ -112,7 +112,7 @@ public class MetricsCollectorAgrona implements MetricsCollector {
 
                 final int offset = CountersManager.counterOffset(id);
                 final long value = valuesBuffer.getLongVolatile(offset);
-                LOGGER.debug(String.format("Identifier (%s, %3d): %,10d - %s", fileName, id, value, label));
+                LOGGER.debug(String.format("Identifier (%s, %3d): %,10d - %s", fileName, id, value, fileName + "-" + label));
 
                 metrics.add(new MetricImpl(label, value));
             });
