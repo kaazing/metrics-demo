@@ -47,9 +47,11 @@ public class MonitoringFolderAgronaImpl implements MonitoringFolderAgrona {
 
         // get all the files from a directory
         File[] fList = directory.listFiles();
-        for (File file : fList) {
-            if (file.isFile()) {
-                files.add(file.getName());
+        if (fList != null) {
+            for (File file : fList) {
+                if (file.isFile()) {
+                    files.add(file.getName());
+                }
             }
         }
         return files;
