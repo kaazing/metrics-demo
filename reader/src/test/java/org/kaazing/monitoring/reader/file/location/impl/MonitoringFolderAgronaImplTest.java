@@ -45,7 +45,7 @@ public class MonitoringFolderAgronaImplTest {
         MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImpl();
         String monitoringDir = "";
         if ("Linux".equals(System.getProperty("os.name"))) {
-            monitoringDir = "/dev/shm/" + IoUtil.tmpDirName() + MONITORING_FILE_LOCATION;
+            monitoringDir = "/dev/shm" + IoUtil.tmpDirName() + MONITORING_FILE_LOCATION;
         }
         else {
             monitoringDir = IoUtil.tmpDirName() + MONITORING_FILE_LOCATION;
