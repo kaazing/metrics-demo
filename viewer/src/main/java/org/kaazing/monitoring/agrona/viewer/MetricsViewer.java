@@ -9,8 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.kaazing.monitoring.agrona.viewer.task.MetricsTask;
 import org.kaazing.monitoring.agrona.viewer.task.MetricsTaskImpl;
-import org.kaazing.monitoring.reader.files.location.MonitoringFolderAgrona;
-import org.kaazing.monitoring.reader.files.location.impl.MonitoringFolderAgronaImpl;
+import org.kaazing.monitoring.reader.MetricsCollectorFactory;
+import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
+import org.kaazing.monitoring.reader.file.location.impl.MonitoringFolderAgronaImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +78,7 @@ public class MetricsViewer {
            // Get new monitoring files list
             List<String> files = agronaFolder.getMonitoringFiles();
 
-            updateMetricsCollectorsBasedOnFiles(files, taskExecutor);
+            updatescheduledTasksBasedOnFiles(files, taskExecutor);
         }, 0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
@@ -85,20 +87,18 @@ public class MetricsViewer {
      * @param files
      * @param taskExecutor 
      */
-    private static void updateMetricsCollectorsBasedOnFiles(List<String> files, ScheduledExecutorService taskExecutor) {
+    private static void updatescheduledTasksBasedOnFiles(List<String> files, ScheduledExecutorService taskExecutor) {
         if (alreadyExistingFiles.size() == 0) {
             //Add tasks for all found monitoring files
             for (int i = 0; i < files.size(); i++) {
-                LOGGER.debug("Adding metrics collector for " + files.get(i));
-                tasks.add(new MetricsTaskImpl(files.get(i), taskExecutor));
+                addMetricsCollector(files.get(i), taskExecutor);
             }
         }
         else {
             //Add tasks for all new monitoring files
             for (int i = 0; i < files.size(); i++) {
                 if (!alreadyExistingFiles.contains(files.get(i))) {
-                    LOGGER.debug("Adding metrics collector for " + files.get(i));
-                    tasks.add(new MetricsTaskImpl(files.get(i), taskExecutor));
+                    addMetricsCollector(files.get(i), taskExecutor);
                 }
             }
             //Remove tasks for removed monitoring files
@@ -112,6 +112,21 @@ public class MetricsViewer {
             }
         }
         alreadyExistingFiles = new ArrayList<String>(files);
+    }
+
+    /**
+     * Method adding metrics collector
+     * @param fileName
+     * @param taskExecutor
+     */
+    private static void addMetricsCollector(String fileName, ScheduledExecutorService taskExecutor) {
+        LOGGER.debug("Adding metrics collector for " + fileName);
+        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstanceForMonitoringFile(fileName);
+        if (metricsCollector == null || !metricsCollector.initialize()) {
+            LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
+            System.exit(1);
+        }
+        tasks.add(new MetricsTaskImpl(fileName, taskExecutor, metricsCollector));
     }
 
     /**

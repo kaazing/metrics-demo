@@ -29,8 +29,8 @@ import java.util.List;
 import org.kaazing.monitoring.reader.Configuration;
 import org.kaazing.monitoring.reader.api.Metric;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
-import org.kaazing.monitoring.reader.files.location.MonitoringFolderAgrona;
-import org.kaazing.monitoring.reader.files.location.impl.MonitoringFolderAgronaImpl;
+import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
+import org.kaazing.monitoring.reader.file.location.impl.MonitoringFolderAgronaImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

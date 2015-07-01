@@ -5,29 +5,20 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.kaazing.monitoring.agrona.viewer.MetricsViewer;
-import org.kaazing.monitoring.reader.MetricsCollectorFactory;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Implementation for the GetMetricsTask abstraction
  *
  */
 public class MetricsTaskImpl implements MetricsTask{
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsTaskImpl.class);
     private MetricsCollector metricsCollector;
     private String fileName;
     private ScheduledFuture<?> task;
 
-    public MetricsTaskImpl(String fileName, ScheduledExecutorService taskExecutor) {
+    public MetricsTaskImpl(String fileName, ScheduledExecutorService taskExecutor, MetricsCollector metricsCollector) {
         this.fileName = fileName;
-
-        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstanceForMonitoringFile(fileName);
-        if (metricsCollector == null || !metricsCollector.initialize()) {
-            LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
-            System.exit(1);
-        }
+        this.metricsCollector = metricsCollector;
 
         @SuppressWarnings("unused")
         ScheduledFuture<?> task = taskExecutor.scheduleAtFixedRate(() -> {
