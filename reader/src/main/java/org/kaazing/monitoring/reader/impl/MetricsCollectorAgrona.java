@@ -110,7 +110,7 @@ public class MetricsCollectorAgrona implements MetricsCollector {
         if (initialized) {
             countersManager.forEach((id, label) -> {
 
-                label = fileName + " - " + label;
+                label = fileName + "-" + label;
                 final int offset = CountersManager.counterOffset(id);
                 final long value = valuesBuffer.getLongVolatile(offset);
                 LOGGER.debug(String.format("%3d: %,10d - %s", id, value, label));
