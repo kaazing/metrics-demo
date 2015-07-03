@@ -24,6 +24,7 @@ package org.kaazing.monitoring.reader.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.Metric;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
 import org.slf4j.Logger;

@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
+import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderAgronaImpl;
 
 import uk.co.real_logic.agrona.IoUtil;
 

@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import org.kaazing.monitoring.reader.CollectorFactory;
 import org.kaazing.monitoring.reader.api.Metric;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
-import org.kaazing.monitoring.reader.impl.MetricsReaderException;
+import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

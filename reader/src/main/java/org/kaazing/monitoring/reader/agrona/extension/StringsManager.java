@@ -1,4 +1,4 @@
-package org.kaazing.monitoring.reader.impl;
+package org.kaazing.monitoring.reader.agrona.extension;
 
 import java.nio.ByteOrder;
 import java.util.function.BiConsumer;

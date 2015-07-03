@@ -25,6 +25,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kaazing.monitoring.reader.agrona.extension.StringsManager;
 import org.kaazing.monitoring.reader.api.Message;
 import org.kaazing.monitoring.reader.api.MessagesCollector;
 import org.slf4j.Logger;

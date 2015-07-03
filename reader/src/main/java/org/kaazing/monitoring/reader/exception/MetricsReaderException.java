@@ -1,4 +1,4 @@
-package org.kaazing.monitoring.reader.impl;
+package org.kaazing.monitoring.reader.exception;
 
 public class MetricsReaderException extends Exception {
     private static final long serialVersionUID = 1997753363232807009L;

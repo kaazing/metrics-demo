@@ -23,11 +23,10 @@ package org.kaazing.monitoring.reader;
 
 import java.nio.MappedByteBuffer;
 
+import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.MessagesCollector;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
-import org.kaazing.monitoring.reader.impl.AgronaManagementFactory;
-import org.kaazing.monitoring.reader.impl.CountersManagerEx;
-import org.kaazing.monitoring.reader.impl.MetricsReaderException;
+import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 import org.kaazing.monitoring.reader.impl.MessagesCollectorAgrona;
 import org.kaazing.monitoring.reader.impl.MetricsCollectorAgrona;
 import org.slf4j.Logger;

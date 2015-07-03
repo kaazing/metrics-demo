@@ -11,9 +11,9 @@ import org.kaazing.monitoring.agrona.viewer.task.MetricsTask;
 import org.kaazing.monitoring.agrona.viewer.task.MetricsTaskImpl;
 import org.kaazing.monitoring.reader.CollectorFactory;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
-import org.kaazing.monitoring.reader.file.location.impl.MonitoringFolderAgronaImpl;
-import org.kaazing.monitoring.reader.impl.MetricsReaderException;
+import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderAgronaImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

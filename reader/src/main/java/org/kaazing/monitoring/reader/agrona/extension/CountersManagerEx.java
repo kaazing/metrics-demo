@@ -1,4 +1,4 @@
-package org.kaazing.monitoring.reader.impl;
+package org.kaazing.monitoring.reader.agrona.extension;
 
 import uk.co.real_logic.agrona.concurrent.AtomicBuffer;
 import uk.co.real_logic.agrona.concurrent.CountersManager;

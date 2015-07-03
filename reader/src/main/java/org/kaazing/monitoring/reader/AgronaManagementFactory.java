@@ -1,6 +1,9 @@
-package org.kaazing.monitoring.reader.impl;
+package org.kaazing.monitoring.reader;
 
 import java.nio.MappedByteBuffer;
+
+import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
+import org.kaazing.monitoring.reader.agrona.extension.StringsManager;
 
 import uk.co.real_logic.agrona.concurrent.UnsafeBuffer;
 

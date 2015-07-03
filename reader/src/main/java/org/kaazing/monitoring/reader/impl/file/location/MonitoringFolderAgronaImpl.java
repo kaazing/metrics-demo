@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.file.location.impl;
+package org.kaazing.monitoring.reader.impl.file.location;
 
 import java.io.File;
 import java.util.ArrayList;
