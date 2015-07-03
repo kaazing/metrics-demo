@@ -21,103 +21,57 @@
 
 package org.kaazing.monitoring.reader.impl;
 
-import java.io.File;
-import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kaazing.monitoring.reader.Configuration;
 import org.kaazing.monitoring.reader.api.Metric;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
-import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
-import org.kaazing.monitoring.reader.file.location.impl.MonitoringFolderAgronaImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.co.real_logic.agrona.IoUtil;
-import uk.co.real_logic.agrona.concurrent.CountersManager;
-import uk.co.real_logic.agrona.concurrent.UnsafeBuffer;
-
 public class MetricsCollectorAgrona implements MetricsCollector {
 
-    private static int COUNTER_LABELS_BUFFER_LENGTH = 32 * 1024 * 1024;
-    private static int COUNTER_VALUES_BUFFER_LENGTH = 1024 * 1024;
+    private CountersManagerEx countersManager;
 
-    private static int METADATA_BUFFER_LENGTH = 64;
-
-    private CountersManager countersManager;
-    private UnsafeBuffer valuesBuffer;
-    private UnsafeBuffer labelsBuffer;
-
-    private boolean initialized = false;
-
-    private String fileName;
-    private MonitoringFolderAgrona monitoringFolder;
-    private File tmpDir;
-
+    private String labelPrefix;
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorAgrona.class);
 
-    /**
-     * Constructor creating the metrics collector based on config and gateway id
-     * @param config
-     * @param gatewayId
-     */
-    public MetricsCollectorAgrona(Configuration config, String gatewayId) {
-        this(config.get(Configuration.CFG_AGRONA_MONITORING_FILE) + gatewayId);
+    public MetricsCollectorAgrona(CountersManagerEx countersManager, String labelPrefix) {
+        this.countersManager = countersManager;
+        this.labelPrefix = labelPrefix;
     }
-
-    /**
-     * Constructor creating the metrics collector based on file name and config
-     * @param fileName
-     * @param config
-     */
-    public MetricsCollectorAgrona(String fileName) {
-        monitoringFolder = new MonitoringFolderAgronaImpl();
-        this.fileName = fileName;
-        tmpDir = new File(monitoringFolder.getMonitoringDir(), this.fileName);
-    }
-
-    @Override
-    public boolean initialize() {
-
-        if (initialized) {
-            LOGGER.debug("Resources already initialized. Exiting method.");
-            return initialized;
-        }
-
-        try {
-            MappedByteBuffer mapNewFile = IoUtil.mapExistingFile(tmpDir, fileName);
-
-            labelsBuffer = new UnsafeBuffer(mapNewFile, METADATA_BUFFER_LENGTH, COUNTER_LABELS_BUFFER_LENGTH);
-            valuesBuffer =
-                    new UnsafeBuffer(mapNewFile, METADATA_BUFFER_LENGTH + COUNTER_LABELS_BUFFER_LENGTH,
-                            COUNTER_VALUES_BUFFER_LENGTH);
-
-            countersManager = new CountersManager(labelsBuffer, valuesBuffer);
-
-            initialized = true;
-        } catch (Exception e) {
-            LOGGER.debug(e.toString());
-        }
-
-        return initialized;
-    }
+//    /**
+//     * Constructor creating the metrics collector based on config and gateway id
+//     * @param config
+//     * @param gatewayId
+//     */
+//    public MetricsCollectorAgrona(Configuration config, String gatewayId) {
+//        this(config.get(Configuration.CFG_AGRONA_MONITORING_FILE) + gatewayId);
+//    }
+//
+//    /**
+//     * Constructor creating the metrics collector based on file name and config
+//     * @param fileName
+//     * @param config
+//     */
+//    public MetricsCollectorAgrona(String fileName) {
+//        monitoringFolder = new MonitoringFolderAgronaImpl();
+//        this.fileName = fileName;
+//        tmpDir = new File(monitoringFolder.getMonitoringDir(), this.fileName);
+//    }
 
     @Override
     public List<Metric> getMetrics() {
         List<Metric> metrics = new ArrayList<Metric>();
 
-        if (initialized) {
-            countersManager.forEach((id, label) -> {
+        countersManager.forEach((id, label) -> {
 
-                label = fileName + "-" + label;
-                final int offset = CountersManager.counterOffset(id);
-                final long value = valuesBuffer.getLongVolatile(offset);
-                LOGGER.debug(String.format("%3d: %,10d - %s", id, value, label));
+            label = labelPrefix + "-" + label;
+            final long value = countersManager.getLongValueForId(id);
+            LOGGER.debug(String.format("%3d: %,10d - %s", id, value, label));
 
-                metrics.add(new MetricImpl(label, value));
-            });
-        }
+            metrics.add(new MetricImpl(label, value));
+        });
 
         return metrics;
     }

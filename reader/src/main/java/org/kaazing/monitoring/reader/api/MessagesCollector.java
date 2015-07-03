@@ -24,14 +24,12 @@ package org.kaazing.monitoring.reader.api;
 import java.util.List;
 
 /**
- * This interface is used for collecting metrics
+ * This interface is used for collecting messages
  */
-public interface MetricsCollector {
-
+public interface MessagesCollector {
     /**
-     * Returns a list with all the collected metrics
-     * @return List<Metric>
+     * Returns a list with all the collected messages
+     * @return List<Message>
      */
-    List<Metric> getMetrics();
-
+    List<Message> getMessages();
 }

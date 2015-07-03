@@ -19,19 +19,28 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.api;
+package org.kaazing.monitoring.reader.impl;
 
-import java.util.List;
+import org.kaazing.monitoring.reader.api.Message;
 
-/**
- * This interface is used for collecting metrics
- */
-public interface MetricsCollector {
+public class MessageImpl implements Message {
 
-    /**
-     * Returns a list with all the collected metrics
-     * @return List<Metric>
-     */
-    List<Metric> getMetrics();
+    private String name;
+    private String value;
+
+    public MessageImpl(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getValue() {
+        return value;
+    }
 
 }
