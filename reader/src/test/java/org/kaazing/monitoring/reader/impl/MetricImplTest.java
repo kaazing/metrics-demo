@@ -18,40 +18,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.kaazing.monitoring.reader.impl;
+import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
+import org.junit.Test;
 import org.kaazing.monitoring.reader.api.Metric;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class MetricsCollectorAgrona implements MetricsCollector {
+public class MetricImplTest {
 
-    private CountersManagerEx countersManager;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorAgrona.class);
-
-    public MetricsCollectorAgrona(CountersManagerEx countersManager) {
-        this.countersManager = countersManager;
-    }
-
-    @Override
-    public List<Metric> getMetrics() {
-        List<Metric> metrics = new ArrayList<Metric>();
-
-        countersManager.forEach((id, label) -> {
-            final long value = countersManager.getLongValueForId(id);
-            LOGGER.debug(String.format("%3d: %,10d - %s", id, value, label));
-
-            metrics.add(new MetricImpl(label, value));
-        });
-
-        return metrics;
+    @Test
+    public void testMetric() {
+        Metric metric = new MetricImpl("test", 1);
+        assertEquals("test", metric.getName());
+        assertEquals(1, metric.getValue());
     }
 
 }

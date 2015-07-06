@@ -12,6 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jmock.version>2.6.0</jmock.version>
     </properties>
 
     <dependencies>
@@ -34,7 +35,12 @@
         <dependency>
             <groupId>org.jmock</groupId>
             <artifactId>jmock-junit4</artifactId>
-            <version>2.6.0</version>
+            <version>${jmock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock-legacy</artifactId>
+            <version>${jmock.version}</version>
         </dependency>
     </dependencies>
 

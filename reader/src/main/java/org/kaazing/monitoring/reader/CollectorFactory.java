@@ -86,7 +86,7 @@ public class CollectorFactory {
      */
     public MetricsCollector getMetricsCollector() {
         CountersManagerEx createCountersManager = agronaManagementFactory.createCountersManager();
-        return new MetricsCollectorAgrona(createCountersManager, fileName);
+        return new MetricsCollectorAgrona(createCountersManager);
     }
 
     /**

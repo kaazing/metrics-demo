@@ -18,48 +18,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.kaazing.monitoring.reader.agrona.extension;
-
+package org.kaazing.monitoring.reader.impl;
 import static org.junit.Assert.*;
 
-import java.nio.ByteOrder;
 import java.util.function.BiConsumer;
 
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.lib.legacy.ClassImposteriser;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Test;
+import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 
-import uk.co.real_logic.agrona.concurrent.AtomicBuffer;
-
-public class StringsManagerTest {
+public class MetricsCollectorAgronaTest {
     private Mockery context = new JUnit4Mockery() {
     };
 
+    @SuppressWarnings("unchecked")
     @Test
-    public void testStringsManager() {
-        AtomicBuffer buffer = context.mock(AtomicBuffer.class);
+    public void testMetricsCollector() {
+        context.setImposteriser(ClassImposteriser.INSTANCE);
+        CountersManagerEx counterManager = context.mock(CountersManagerEx.class);
         context.checking(new Expectations() {{
-            oneOf(buffer).verifyAlignment();
-            oneOf(buffer).getInt(0);
-            oneOf(buffer).getStringUtf8(0, null);
+            oneOf(counterManager).forEach(with(aNonNull(BiConsumer.class)));
         }});
-        StringsManager manager = new StringsManager(buffer, buffer);
-        assertFalse(manager.equals(null));
-        BiConsumer<Integer, String> consumer = new BiConsumer<Integer, String>() {
-            
-            @Override
-            public void accept(Integer t, String u) {
-            }
-        };
-        manager.forEach(consumer);
-        ByteOrder order = null;
-        manager.getStringValueUTF8(0, order);
-    }
-
-    @Test
-    public void testStringsManagerStatic() {
-        assertEquals(0, StringsManager.getEntityOffset(0));
+        MetricsCollectorAgrona collector = new MetricsCollectorAgrona(counterManager);
+        assertNotNull(collector.getMetrics());
     }
 
 }
