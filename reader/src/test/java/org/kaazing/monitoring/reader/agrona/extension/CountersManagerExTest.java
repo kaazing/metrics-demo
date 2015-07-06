@@ -18,49 +18,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.kaazing.monitoring.reader.agrona.extension;
 
-import static org.junit.Assert.*;
-
-import java.nio.ByteOrder;
-import java.util.function.BiConsumer;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 
 import uk.co.real_logic.agrona.concurrent.AtomicBuffer;
 
-public class StringsManagerTest {
-    private Mockery context = new JUnit4Mockery() {
-    };
+public class CountersManagerExTest {
 
     @Test
-    public void testStringsManager() {
+    public void testCountersManagerEx() {
+        Mockery context = new Mockery();
+
+        context.setImposteriser(ClassImposteriser.INSTANCE);
+
         AtomicBuffer buffer = context.mock(AtomicBuffer.class);
         context.checking(new Expectations() {{
             oneOf(buffer).verifyAlignment();
-            oneOf(buffer).getInt(0);
-            oneOf(buffer).getStringUtf8(0, null);
+            oneOf(buffer).capacity();
+            oneOf(buffer).getLongVolatile(0);
         }});
-        StringsManager manager = new StringsManager(buffer, buffer);
+
+        CountersManagerEx manager = new CountersManagerEx(buffer, buffer);
         assertNotNull(manager);
 
-        BiConsumer<Integer, String> consumer = new BiConsumer<Integer, String>() {
-
-            @Override
-            public void accept(Integer t, String u) {
-            }
-        };
-        manager.forEach(consumer);
-        ByteOrder order = null;
-        assertNotNull(manager.getStringValueUTF8(0, order));
+        assertEquals(manager.getLongValueForId(0).intValue(), 0);
     }
-
-    @Test
-    public void testStringsManagerStatic() {
-        assertEquals(0, StringsManager.getEntityOffset(0));
-    }
-
 }

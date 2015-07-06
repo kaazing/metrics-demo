@@ -19,21 +19,20 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.exception;
+package org.kaazing.monitoring.reader.impl;
 
-public class MetricsReaderException extends Exception {
-    private static final long serialVersionUID = 1997753363232807009L;
+import static org.junit.Assert.assertEquals;
 
-    public MetricsReaderException(String message) {
-        super(message);
-    }
+import org.junit.Test;
+import org.kaazing.monitoring.reader.api.Message;
 
-    public MetricsReaderException(Throwable cause) {
-        super(cause);
-    }
+public class MessageImplTest {
 
-    public MetricsReaderException(String message, Throwable cause) {
-        super(message, cause);
+    @Test
+    public void testMessage() {
+        Message message = new MessageImpl("testName", "testValue");
+        assertEquals(message.getName(), "testName");
+        assertEquals(message.getValue(), "testValue");
     }
 
 }
