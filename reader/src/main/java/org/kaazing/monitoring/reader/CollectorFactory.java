@@ -74,7 +74,7 @@ public class CollectorFactory {
             agronaManagementFactory = new AgronaManagementFactory(mappedFile);
             initialized = true;
         } catch (IllegalStateException e) {
-            LOGGER.debug(e.toString());
+            LOGGER.error(e.toString());
         }
 
         return initialized;

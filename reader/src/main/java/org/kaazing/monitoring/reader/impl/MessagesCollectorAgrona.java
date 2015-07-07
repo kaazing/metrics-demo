@@ -50,7 +50,9 @@ public class MessagesCollectorAgrona implements MessagesCollector {
         stringsManager.forEach((id, label) -> {
 
             final String value = stringsManager.getStringValueUTF8(id, NATIVE_BYTE_ORDER);
-            LOGGER.debug(String.format("%3d: %s - %s", id, value, label));
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("%3d: %20s - %s", id, value, label));
+            }
 
             messages.add(new MessageImpl(label, value));
         });

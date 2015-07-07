@@ -46,7 +46,9 @@ public class MetricsCollectorAgrona implements MetricsCollector {
 
         countersManager.forEach((id, label) -> {
             final long value = countersManager.getLongValueForId(id);
-            LOGGER.debug(String.format("%3d: %,10d - %s", id, value, label));
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("%3d: %,20d - %s", id, value, label));
+            }
 
             metrics.add(new MetricImpl(label, value));
         });
