@@ -24,6 +24,7 @@ package org.kaazing.monitoring.reader;
 import java.nio.MappedByteBuffer;
 
 import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
+import org.kaazing.monitoring.reader.agrona.extension.StringsManager;
 import org.kaazing.monitoring.reader.api.MessagesCollector;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
@@ -85,8 +86,11 @@ public class CollectorFactory {
      * @return MetricsCollectorAgrona
      */
     public MetricsCollector getMetricsCollector() {
-        CountersManagerEx createCountersManager = agronaManagementFactory.createCountersManager();
-        return new MetricsCollectorAgrona(createCountersManager);
+        if (initialized) {
+            CountersManagerEx createCountersManager = agronaManagementFactory.createCountersManager();
+            return new MetricsCollectorAgrona(createCountersManager);
+        }
+        return null;
     }
 
     /**
@@ -94,6 +98,10 @@ public class CollectorFactory {
      * @return MessagesCollectorAgrona
      */
     public MessagesCollector getMessagesCollector() {
-        return new MessagesCollectorAgrona(agronaManagementFactory.createStringsManager());
+        if (initialized) {
+            StringsManager stringsManager = agronaManagementFactory.createStringsManager();
+            return new MessagesCollectorAgrona(stringsManager);
+        }
+        return null;
     }
 }

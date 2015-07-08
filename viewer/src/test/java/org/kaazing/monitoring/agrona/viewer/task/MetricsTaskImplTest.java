@@ -21,10 +21,14 @@
 package org.kaazing.monitoring.agrona.viewer.task;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.util.concurrent.Delayed;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -67,6 +71,18 @@ public class MetricsTaskImplTest {
         ScheduledFuture<?> sched = getScheduledTask(taskExecutor);
         MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, metricsCollector, messagesCollector);
         assertEquals(sched, task.getScheduledTask());
+        assertNotNull(task.getScheduledTask());
+    }
+
+    @Test
+    public void testScheduledTaskMetrics() {
+        ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
+        MetricsCollector metricsCollector = context.mock(MetricsCollector.class);
+        MessagesCollector messagesCollector = context.mock(MessagesCollector.class);
+        getScheduledTask(taskExecutor);
+        MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, metricsCollector, messagesCollector);
+        assertNotNull(task.getMessageList());
+        assertNotNull(task.getMessageList());
     }
 
     /**
@@ -75,7 +91,50 @@ public class MetricsTaskImplTest {
      * @return
      */
     private ScheduledFuture<?> getScheduledTask(ScheduledExecutorService taskExecutor) {
-        ScheduledFuture<?> sched = null;
+        ScheduledFuture<?> sched = new ScheduledFuture<Object>() {
+
+            @Override
+            public long getDelay(TimeUnit arg0) {
+                // TODO Auto-generated method stub
+                return 0;
+            }
+
+            @Override
+            public int compareTo(Delayed arg0) {
+                // TODO Auto-generated method stub
+                return 0;
+            }
+
+            @Override
+            public boolean cancel(boolean arg0) {
+                // TODO Auto-generated method stub
+                return false;
+            }
+
+            @Override
+            public Object get() throws InterruptedException, ExecutionException {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public Object get(long arg0, TimeUnit arg1) throws InterruptedException, ExecutionException, TimeoutException {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public boolean isCancelled() {
+                // TODO Auto-generated method stub
+                return false;
+            }
+
+            @Override
+            public boolean isDone() {
+                // TODO Auto-generated method stub
+                return false;
+            }
+        };
         context.checking(new Expectations() {{
             oneOf(taskExecutor).scheduleAtFixedRate(with(any(Runnable.class)), with(any(Long.class)),  with(any(Long.class)),  with(any(TimeUnit.class)));
             will(returnValue(sched));

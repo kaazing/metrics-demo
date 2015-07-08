@@ -26,8 +26,9 @@ import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 public class CollectorFactoryTest {
 
     @Test
-    public void testCollectorFactory() throws Exception {
+    public void testCollectorFactoryCanLoadConfig() throws Exception {
         CollectorFactory collector = new CollectorFactory("test");
+
         try {
             collector.initialize();
         } catch (MetricsReaderException e) {

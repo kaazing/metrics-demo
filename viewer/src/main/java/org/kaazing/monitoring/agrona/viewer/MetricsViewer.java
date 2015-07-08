@@ -133,7 +133,7 @@ public class MetricsViewer {
         MetricsCollector metricsCollector = collector.getMetricsCollector();
         MessagesCollector messagesCollector = collector.getMessagesCollector();
         if (metricsCollector == null || messagesCollector == null) {
-            System.out.println("There was a problem initializing the metrics reader. Exiting application.");
+            LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
             System.exit(1);
         }
         tasks.add(new MetricsTaskImpl(fileName, taskExecutor, metricsCollector, messagesCollector));
