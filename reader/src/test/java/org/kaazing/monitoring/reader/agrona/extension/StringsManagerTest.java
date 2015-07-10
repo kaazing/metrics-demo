@@ -42,7 +42,7 @@ public class StringsManagerTest {
         context.checking(new Expectations() {{
             oneOf(buffer).verifyAlignment();
             oneOf(buffer).getInt(0);
-            oneOf(buffer).getStringUtf8(0, null);
+            oneOf(buffer).getStringUtf8(0, null);will(returnValue(""));
         }});
         StringsManager manager = new StringsManager(buffer, buffer);
         assertNotNull(manager);

@@ -43,7 +43,7 @@ public class CountersManagerExTest {
         context.checking(new Expectations() {{
             oneOf(buffer).verifyAlignment();
             oneOf(buffer).capacity();
-            oneOf(buffer).getLongVolatile(0);
+            oneOf(buffer).getLongVolatile(0);will(returnValue(new Long(0)));
         }});
 
         CountersManagerEx manager = new CountersManagerEx(buffer, buffer);
