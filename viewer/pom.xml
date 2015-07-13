@@ -16,9 +16,9 @@
 
     <url>https://github.com/kaazing/metrics</url>
 	
-	<scm>
+    <scm>
         <connection>scm:git:${project.scm.url}</connection>
-		<developerConnection>scm:git:${project.scm.url}</developerConnection>
+        <developerConnection>scm:git:${project.scm.url}</developerConnection>
         <url>git@github.com:kaazing/metrics.git</url>
     </scm>
 
