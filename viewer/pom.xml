@@ -8,14 +8,14 @@
         <artifactId>metrics</artifactId>
         <version>develop-SNAPSHOT</version>
     </parent>
-	
+
     <artifactId>metrics.viewer</artifactId>
     <version>develop-SNAPSHOT</version>
     <name>Kaazing Metrics Viewer</name>
     <description>Sample metrics reader application for Gateway monitoring</description>
 
     <url>https://github.com/kaazing/metrics</url>
-	
+
     <scm>
         <connection>scm:git:${project.scm.url}</connection>
         <developerConnection>scm:git:${project.scm.url}</developerConnection>
