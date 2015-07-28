@@ -7,8 +7,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.kaazing.monitoring.agrona.viewer.MetricsViewer;
-import org.kaazing.monitoring.reader.api.Message;
-import org.kaazing.monitoring.reader.api.MessagesCollector;
 import org.kaazing.monitoring.reader.api.Metric;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
 
@@ -20,21 +18,16 @@ import org.kaazing.monitoring.reader.api.MetricsCollector;
  */
 public class MetricsTaskImpl implements MetricsTask{
     private MetricsCollector metricsCollector;
-    private MessagesCollector messagesCollector;
     private List<Metric> metricsList = new ArrayList<Metric>();
-    private List<Message> messageList = new ArrayList<Message>();
     private String fileName;
     private ScheduledFuture<?> task;
 
-    public MetricsTaskImpl(String fileName, ScheduledExecutorService taskExecutor, MetricsCollector metricsCollector, MessagesCollector messagesCollector) {
+    public MetricsTaskImpl(String fileName, ScheduledExecutorService taskExecutor, MetricsCollector metricsCollector) {
         this.fileName = fileName;
         this.metricsCollector = metricsCollector;
-        this.messagesCollector = messagesCollector;
         task = taskExecutor.scheduleAtFixedRate(() -> {
             // metrics retrieved - log message directly added to the logger output for each metric (using default logging in metricsCollector.getMetrics() method)
             metricsList = metricsCollector.getMetrics();
-            // messages retrieved - log message directly added to the logger output (using default logging in messagesCollector.getMessages() method)
-            messageList = messagesCollector.getMessages();
         }, 0, MetricsViewer.UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
@@ -49,11 +42,6 @@ public class MetricsTaskImpl implements MetricsTask{
     }
 
     @Override
-    public MessagesCollector getMessagesCollector() {
-        return messagesCollector;
-    }
-
-    @Override
     public ScheduledFuture<?> getScheduledTask() {
         return task;
     }
@@ -61,11 +49,6 @@ public class MetricsTaskImpl implements MetricsTask{
     @Override
     public List<Metric> getMetricsList() {
         return metricsList;
-    }
-
-    @Override
-    public List<Message> getMessageList() {
-        return messageList;
     }
 
     @Override

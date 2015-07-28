@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 import org.kaazing.monitoring.agrona.viewer.task.MetricsTask;
 import org.kaazing.monitoring.agrona.viewer.task.MetricsTaskImpl;
 import org.kaazing.monitoring.reader.CollectorFactory;
-import org.kaazing.monitoring.reader.api.MessagesCollector;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
@@ -131,12 +130,11 @@ public class MetricsViewer {
             System.exit(1);
         }
         MetricsCollector metricsCollector = collector.getMetricsCollector();
-        MessagesCollector messagesCollector = collector.getMessagesCollector();
-        if (metricsCollector == null || messagesCollector == null) {
+        if (metricsCollector == null) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
             System.exit(1);
         }
-        tasks.add(new MetricsTaskImpl(fileName, taskExecutor, metricsCollector, messagesCollector));
+        tasks.add(new MetricsTaskImpl(fileName, taskExecutor, metricsCollector));
     }
 
     /**

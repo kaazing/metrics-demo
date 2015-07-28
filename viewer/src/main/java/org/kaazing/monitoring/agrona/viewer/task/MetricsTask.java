@@ -3,8 +3,6 @@ package org.kaazing.monitoring.agrona.viewer.task;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-import org.kaazing.monitoring.reader.api.Message;
-import org.kaazing.monitoring.reader.api.MessagesCollector;
 import org.kaazing.monitoring.reader.api.Metric;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
 
@@ -38,21 +36,9 @@ public interface MetricsTask {
     void cleanup();
 
     /**
-     * Messages collector getter
-     * @return
-     */
-    MessagesCollector getMessagesCollector();
-
-    /**
      * Metrics items retrieval
      * @return
      */
     List<Metric> getMetricsList();
-
-    /**
-     * Message items retrieval
-     * @return
-     */
-    List<Message> getMessageList();
 
 }
