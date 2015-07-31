@@ -18,20 +18,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.kaazing.monitoring.reader.impl;
+import static org.junit.Assert.assertEquals;
 
-package org.kaazing.monitoring.reader.api;
+import org.junit.Test;
+import org.kaazing.monitoring.reader.api.Metric;
 
-import java.util.List;
+public class MetricImplTest {
 
-/**
- * This interface is used for collecting metrics
- */
-public interface MetricsCollector {
-
-    /**
-     * Returns a list with all the collected metrics
-     * @return List<Metric>
-     */
-    List<Metric> getMetrics();
+    @Test
+    public void testMetric() {
+        Metric metric = new MetricImpl("test", 1);
+        assertEquals("test", metric.getName());
+        assertEquals(1, metric.getValue());
+    }
 
 }

@@ -26,9 +26,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.kaazing.monitoring.reader.MetricsCollectorFactory;
+import org.kaazing.monitoring.reader.CollectorFactory;
 import org.kaazing.monitoring.reader.api.Metric;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,11 @@ public class MainApp {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
 
     public static void main(String[] args) {
+
+       if (args.length == 0) {
+           LOGGER.error("Please provide a gateway identifier for the StatsD publisher. Exiting application.");
+           System.exit(1);
+       }
 
         int exitCode = 0;
 
@@ -56,24 +62,30 @@ public class MainApp {
         int updateInterval =
                 Integer.parseInt(config.get(Configuration.CFG_UPDATE_INTERVAL, Integer.toString(DEFAULT_UPDATE_INTERVAL)));
 
-        MetricsCollector metricsCollector = MetricsCollectorFactory.getInstance();
+        CollectorFactory collectorFactory = new CollectorFactory(args[0]);
+
+        // Waits until the metrics file is created by the producer (e.g. this app is started and then waits for a
+        // gateway to start and create the file)
+        try {
+            while (!collectorFactory.initialize()) {
+                try {
+                    Thread.sleep(updateInterval);
+                } catch (InterruptedException e) {
+                    LOGGER.debug("An InterruptedException was caught while trying to initialize metricsCollector: ", e);
+                    if (!collectorFactory.initialize()) {
+                        System.exit(1);
+                    }
+                }
+            }
+        } catch (MetricsReaderException e) {
+            LOGGER.error("There was a problem with the metrics.reader configuration file. Exiting application.");
+        }
+
+        MetricsCollector metricsCollector = collectorFactory.getMetricsCollector();
 
         if (metricsCollector == null) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
             System.exit(1);
-        }
-
-        // Waits until the metrics file is created by the producer (e.g. this app is started and then waits for a
-        // gateway to start and create the file)
-        while (!metricsCollector.initialize()) {
-            try {
-                Thread.sleep(updateInterval);
-            } catch (InterruptedException e) {
-                LOGGER.debug("An InterruptedException was caught while trying to initialize metricsCollector: ", e);
-                if (!metricsCollector.initialize()) {
-                    System.exit(1);
-                }
-            }
         }
 
         ScheduledExecutorService taskExecutor = Executors.newScheduledThreadPool(1);

@@ -19,32 +19,21 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader;
+package org.kaazing.monitoring.reader.exception;
 
-import org.kaazing.monitoring.reader.api.MetricsCollector;
-import org.kaazing.monitoring.reader.impl.MetricsCollectorAgrona;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public class MetricsReaderException extends Exception {
+    private static final long serialVersionUID = 1997753363232807009L;
 
-/**
- * Factory class that returns a MetricsCollector instance
- */
-public class MetricsCollectorFactory {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorFactory.class);
-
-    /**
-     * Initializes a MetricCollector instance
-     * @return MetricsCollectorAgrona
-     */
-    public static MetricsCollector getInstance() {
-        Configuration config = new Configuration();
-
-        if (!config.loadConfigFile()) {
-            LOGGER.error("There was a problem with the configuration file. Exiting application.");
-            return null;
-        }
-
-        return new MetricsCollectorAgrona(config);
+    public MetricsReaderException(String message) {
+        super(message);
     }
+
+    public MetricsReaderException(Throwable cause) {
+        super(cause);
+    }
+
+    public MetricsReaderException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }
