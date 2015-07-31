@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -35,6 +36,7 @@ import uk.co.real_logic.agrona.IoUtil;
 
 public class MonitoringFolderAgronaImplTest {
     private static final String MONITORING_FILE_LOCATION = "/kaazing";
+    private static final long TIMESTAMP = (new Date()).getTime();
 
     @Test
     public void testGetMonitoringFilesShouldReturnEmptyList() {
@@ -46,12 +48,14 @@ public class MonitoringFolderAgronaImplTest {
     }
 
     @Test
-    public void testGetMonitoringFilesShouldNonEmptyList() {
-        MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImpl();
+    public void testGetMonitoringFilesShouldReturnNonEmptyList() {
+        MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImplMonitoringDirMocked();
         String folder = monitoringFolder.getMonitoringDir();
+        File directory = new File(folder);
         File file1 = new File(folder + "/test1");
         File file2 = new File(folder + "/test2");
         try {
+            directory.mkdir();
             file1.createNewFile();
             file2.createNewFile();
         } catch (IOException e) {
@@ -64,6 +68,7 @@ public class MonitoringFolderAgronaImplTest {
         //cleanup files
         file1.delete();
         file2.delete();
+        directory.delete();
     }
 
     @Test
@@ -77,5 +82,16 @@ public class MonitoringFolderAgronaImplTest {
             monitoringDir = IoUtil.tmpDirName() + MONITORING_FILE_LOCATION;
         }
         assertEquals(monitoringDir , monitoringFolder.getMonitoringDir());
+    }
+
+    private class MonitoringFolderAgronaImplMonitoringDirMocked extends MonitoringFolderAgronaImpl {
+        @Override
+        public String getMonitoringDir() {
+            String prefix = "";
+            if ("Linux".equalsIgnoreCase(System.getProperty("os.name"))) {
+                prefix = "/dev/shm";
+            }
+            return prefix + IoUtil.tmpDirName() + "KaazingTest" + TIMESTAMP;
+        }
     }
 }
