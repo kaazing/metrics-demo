@@ -35,12 +35,15 @@ import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderAgronaIm
 import uk.co.real_logic.agrona.IoUtil;
 
 public class MonitoringFolderAgronaImplTest {
+    private static final String DEV_SHM = "/dev/shm";
+    private static final String OS_NAME = "os.name";
+    private static final String LINUX = "Linux";
     private static final String MONITORING_FILE_LOCATION = "/kaazing";
     private static final long TIMESTAMP = (new Date()).getTime();
 
     @Test
     public void testGetMonitoringFilesShouldReturnEmptyList() {
-        MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImpl();
+        MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImplMonitoringDirMocked();
         List<String> files = monitoringFolder.getMonitoringFiles();
         assertNotNull(files);
         //no monitoring files should be present by default
@@ -75,8 +78,8 @@ public class MonitoringFolderAgronaImplTest {
     public void testGetMonitoringDir() {
         MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImpl();
         String monitoringDir = "";
-        if ("Linux".equals(System.getProperty("os.name"))) {
-            monitoringDir = "/dev/shm" + IoUtil.tmpDirName() + MONITORING_FILE_LOCATION;
+        if (LINUX.equals(System.getProperty(OS_NAME))) {
+            monitoringDir = DEV_SHM + IoUtil.tmpDirName() + MONITORING_FILE_LOCATION;
         }
         else {
             monitoringDir = IoUtil.tmpDirName() + MONITORING_FILE_LOCATION;
@@ -88,8 +91,8 @@ public class MonitoringFolderAgronaImplTest {
         @Override
         public String getMonitoringDir() {
             String prefix = "";
-            if ("Linux".equalsIgnoreCase(System.getProperty("os.name"))) {
-                prefix = "/dev/shm";
+            if (LINUX.equalsIgnoreCase(System.getProperty(OS_NAME))) {
+                prefix = DEV_SHM;
             }
             return prefix + IoUtil.tmpDirName() + "KaazingTest" + TIMESTAMP;
         }
