@@ -34,7 +34,7 @@ import uk.co.real_logic.agrona.concurrent.AtomicBuffer;
 public class CountersManagerExTest {
 
     @Test
-    public void testGetLongValueForIdShouldReturnCounterValue() {
+    public void getLongValueForIdShouldReturnCounterValue() {
         Mockery context = new Mockery();
 
         context.setImposteriser(ClassImposteriser.INSTANCE);

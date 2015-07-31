@@ -42,7 +42,7 @@ public class MonitoringFolderAgronaImplTest {
     private static final long TIMESTAMP = (new Date()).getTime();
 
     @Test
-    public void testGetMonitoringFilesShouldReturnEmptyList() {
+    public void getMonitoringFilesShouldReturnEmptyList() {
         MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImplMonitoringDirMocked();
         List<String> files = monitoringFolder.getMonitoringFiles();
         assertNotNull(files);
@@ -51,32 +51,37 @@ public class MonitoringFolderAgronaImplTest {
     }
 
     @Test
-    public void testGetMonitoringFilesShouldReturnNonEmptyList() {
+    public void getMonitoringFilesShouldReturnNonEmptyList() {
         MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImplMonitoringDirMocked();
         String folder = monitoringFolder.getMonitoringDir();
         File directory = new File(folder);
         File file1 = new File(folder + "/test1");
         File file2 = new File(folder + "/test2");
-        boolean created = directory.mkdirs();
-        assertEquals(true, created);
         try {
-            file1.createNewFile();
-            file2.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+            boolean created = directory.mkdirs();
+            assertEquals(true, created);
+            try {
+                file1.createNewFile();
+                file2.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            List<String> files = monitoringFolder.getMonitoringFiles();
+            assertNotNull(files);
+            //no monitoring files should be present by default
+            assertEquals(2, files.size());
+
         }
-        List<String> files = monitoringFolder.getMonitoringFiles();
-        assertNotNull(files);
-        //no monitoring files should be present by default
-        assertEquals(2, files.size());
-        //cleanup files
-        file1.delete();
-        file2.delete();
-        directory.delete();
+        finally {
+            // always cleanup files, even if there is an exception
+            file1.delete();
+            file2.delete();
+            directory.delete();
+        }
     }
 
     @Test
-    public void testGetMonitoringDir() {
+    public void getMonitoringDirShouldReturnConfiguredDirectoryNameInCorrectLocation() {
         MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImpl();
         String monitoringDir = "";
         if (LINUX.equals(System.getProperty(OS_NAME))) {

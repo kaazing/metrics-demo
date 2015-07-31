@@ -42,7 +42,7 @@ public class MetricsCollectorAgronaTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testGetMetricsShouldReturnEmptyList() {
+    public void getMetricsShouldReturnEmptyList() {
         context.setImposteriser(ClassImposteriser.INSTANCE);
         CountersManagerEx counterManager = context.mock(CountersManagerEx.class);
         context.checking(new Expectations() {{
@@ -52,6 +52,7 @@ public class MetricsCollectorAgronaTest {
         assertNotNull(collector.getMetrics());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void getMetricsShouldReturnAvailableMetrics () {
         context.setImposteriser(ClassImposteriser.INSTANCE);
