@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
 import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderAgronaImpl;
@@ -51,7 +50,6 @@ public class MonitoringFolderAgronaImplTest {
         assertEquals(0, files.size());
     }
 
-    @Ignore("Requires write access to target location")
     @Test
     public void testGetMonitoringFilesShouldReturnNonEmptyList() {
         MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImplMonitoringDirMocked();
@@ -59,7 +57,7 @@ public class MonitoringFolderAgronaImplTest {
         File directory = new File(folder);
         File file1 = new File(folder + "/test1");
         File file2 = new File(folder + "/test2");
-        boolean created = directory.mkdir();
+        boolean created = directory.mkdirs();
         assertEquals(true, created);
         try {
             file1.createNewFile();
