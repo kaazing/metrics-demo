@@ -59,13 +59,7 @@ public class CollectorFactory {
             return initialized;
         }
 
-        Configuration config = new Configuration();
-
-        if (!config.loadConfigFile()) {
-            throw new MetricsReaderException("Problem loading the configuration file.");
-        }
-
-        FileProcessor fileProcessor = new FileProcessor(config, fileName);
+        FileProcessor fileProcessor = new FileProcessor(fileName);
 
         try {
             mappedFile = fileProcessor.getMappedFile();

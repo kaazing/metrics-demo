@@ -24,6 +24,9 @@ package org.kaazing.monitoring.reader;
 import java.io.File;
 import java.nio.MappedByteBuffer;
 
+import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
+import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderAgronaImpl;
+
 import uk.co.real_logic.agrona.IoUtil;
 
 /**
@@ -32,15 +35,10 @@ import uk.co.real_logic.agrona.IoUtil;
  */
 public class FileProcessor {
 
-    private Configuration config;
-
     private String fileName;
-    private static final String LINUX_OS = "Linux";
-    private static final String OS_NAME_SYSTEM_PROPERTY = "os.name";
-    private static final String LINUX_DEV_SHM_DIRECTORY = "/dev/shm";
+    private static MonitoringFolderAgrona agronaFolder = new MonitoringFolderAgronaImpl();
 
-    public FileProcessor(Configuration config, String fileName) {
-        this.config = config;
+    public FileProcessor(String fileName) {
         this.fileName = fileName;
     }
 
@@ -49,19 +47,9 @@ public class FileProcessor {
      * @return MappedByteBuffer - the Agrona mapped file
      */
     public MappedByteBuffer getMappedFile() {
-        String prefix = "";
-        if (LINUX_OS.equalsIgnoreCase(System.getProperty(OS_NAME_SYSTEM_PROPERTY))) {
-            prefix = LINUX_DEV_SHM_DIRECTORY;
-        }
+        File file = new File(agronaFolder.getMonitoringDir(), fileName);
 
-        String dirName = config.get(Configuration.CFG_AGRONA_MONITORING_DIR);
-
-        if (fileName == null) {
-            fileName = config.get(Configuration.CFG_AGRONA_MONITORING_FILE);
-        }
-        File tmpDir = new File(prefix + IoUtil.tmpDirName() + dirName, fileName);
-
-        return IoUtil.mapExistingFile(tmpDir, fileName);
+        return IoUtil.mapExistingFile(file, fileName);
     }
 
 }

@@ -52,31 +52,13 @@ public class MetricsTaskImplTest {
     }
 
     @Test
-    public void testGetMetricsCollector() {
-        ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
-        MetricsCollector metricsCollector = context.mock(MetricsCollector.class);
-        getScheduledTask(taskExecutor);
-        MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, metricsCollector);
-        assertEquals(metricsCollector, task.getMetricsCollector());
-    }
-
-    @Test
-    public void testGetScheduledTask() {
-        ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
-        MetricsCollector metricsCollector = context.mock(MetricsCollector.class);
-        ScheduledFuture<?> sched = getScheduledTask(taskExecutor);
-        MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, metricsCollector);
-        assertEquals(sched, task.getScheduledTask());
-        assertNotNull(task.getScheduledTask());
-    }
-
-    @Test
-    public void testScheduledTaskMetrics() {
+    public void testCleanup() {
         ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
         MetricsCollector metricsCollector = context.mock(MetricsCollector.class);
         getScheduledTask(taskExecutor);
         MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, metricsCollector);
         assertNotNull(task);
+        task.cleanup();
     }
 
     /**

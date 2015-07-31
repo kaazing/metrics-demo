@@ -23,6 +23,8 @@ package org.kaazing.monitoring.reader.file.location.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
@@ -35,11 +37,33 @@ public class MonitoringFolderAgronaImplTest {
     private static final String MONITORING_FILE_LOCATION = "/kaazing";
 
     @Test
-    public void testGetMonitoringFiles() {
+    public void testGetMonitoringFilesShouldReturnEmptyList() {
         MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImpl();
         List<String> files = monitoringFolder.getMonitoringFiles();
-        //no monitoring files should be present by default
         assertNotNull(files);
+        //no monitoring files should be present by default
+        assertEquals(0, files.size());
+    }
+
+    @Test
+    public void testGetMonitoringFilesShouldNonEmptyList() {
+        MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImpl();
+        String folder = monitoringFolder.getMonitoringDir();
+        File file1 = new File(folder + "/test1");
+        File file2 = new File(folder + "/test2");
+        try {
+            file1.createNewFile();
+            file2.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<String> files = monitoringFolder.getMonitoringFiles();
+        assertNotNull(files);
+        //no monitoring files should be present by default
+        assertEquals(2, files.size());
+        //cleanup files
+        file1.delete();
+        file2.delete();
     }
 
     @Test
@@ -54,5 +78,4 @@ public class MonitoringFolderAgronaImplTest {
         }
         assertEquals(monitoringDir , monitoringFolder.getMonitoringDir());
     }
-
 }

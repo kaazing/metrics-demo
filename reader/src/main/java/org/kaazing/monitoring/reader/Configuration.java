@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 public class Configuration {
 
     public static final String CFG_AGRONA_MONITORING_DIR = "metrics.reader.agrona.monitoring.dir.name";
-    public static final String CFG_AGRONA_MONITORING_FILE = "metrics.reader.agrona.monitoring.file.name";
 
     private Properties properties;
     private static final String CONFIG_FILE_NAME = "metrics.reader.config.properties";
