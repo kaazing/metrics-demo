@@ -51,6 +51,7 @@ public class MonitoringFolderAgronaImplTest {
         assertEquals(0, files.size());
     }
 
+    @Ignore("Requires write access to target location")
     @Test
     public void testGetMonitoringFilesShouldReturnNonEmptyList() {
         MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImplMonitoringDirMocked();
@@ -58,7 +59,7 @@ public class MonitoringFolderAgronaImplTest {
         File directory = new File(folder);
         File file1 = new File(folder + "/test1");
         File file2 = new File(folder + "/test2");
-        boolean created = directory.mkdirs();
+        boolean created = directory.mkdir();
         assertEquals(true, created);
         try {
             file1.createNewFile();
