@@ -57,8 +57,9 @@ public class MonitoringFolderAgronaImplTest {
         File directory = new File(folder);
         File file1 = new File(folder + "/test1");
         File file2 = new File(folder + "/test2");
+        boolean created = directory.mkdir();
+        assertEquals(true, created);
         try {
-            directory.mkdir();
             file1.createNewFile();
             file2.createNewFile();
         } catch (IOException e) {
