@@ -9,17 +9,17 @@
         <version>2.14</version>
     </parent>
 
-    <artifactId>metrics</artifactId>
-    <name>Kaazing Gateway Metrics</name>
+    <artifactId>metrics-demo</artifactId>
+    <name>Kaazing Gateway Metrics Demos</name>
     <version>develop-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <url>https://github.com/kaazing/metrics</url>
-    <description>Kaazing Gateway Metrics</description>
+    <url>https://github.com/kaazing/metrics-demo</url>
+    <description>Kaazing Gateway Metrics samples</description>
 
     <scm>
-        <url>https://github.com/kaazing/metrics</url>
-        <connection>scm:git:https://github.com/kaazing/metrics.git</connection>
+        <url>https://github.com/kaazing/metrics-demo</url>
+        <connection>scm:git:https://github.com/kaazing/metrics-demo.git</connection>
     </scm>
 
     <properties>
