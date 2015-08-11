@@ -21,17 +21,14 @@
 
 package org.kaazing.monitoring.reader.api;
 
-import java.util.List;
-
 /**
- * This interface is used for collecting metrics
+ * This interface is used for building a MMFReader
  */
-public interface MetricsCollector {
+public interface MMFReaderBuilder {
 
     /**
-     * Returns a list with all the collected metrics
-     * @return List<Metric>
+     * Builds a MMFReader instance
      */
-    List<Counter> getCounters();
+    MMFReader build();
 
 }

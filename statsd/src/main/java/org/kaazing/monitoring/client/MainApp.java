@@ -26,10 +26,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.kaazing.monitoring.reader.CollectorFactory;
-import org.kaazing.monitoring.reader.api.Metric;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.api.Counter;
+import org.kaazing.monitoring.reader.api.MMFReader;
+import org.kaazing.monitoring.reader.api.MonitoringDataProcessor;
+import org.kaazing.monitoring.reader.api.ServiceCounters;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
+import org.kaazing.monitoring.reader.impl.AgronaMonitoringDataProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,10 +45,10 @@ public class MainApp {
 
     public static void main(String[] args) {
 
-       if (args.length == 0) {
-           LOGGER.error("Please provide a gateway identifier for the StatsD publisher. Exiting application.");
-           System.exit(1);
-       }
+        if (args.length == 0) {
+            LOGGER.error("Please provide a gateway identifier for the StatsD publisher. Exiting application.");
+            System.exit(1);
+        }
 
         int exitCode = 0;
 
@@ -62,17 +64,17 @@ public class MainApp {
         int updateInterval =
                 Integer.parseInt(config.get(Configuration.CFG_UPDATE_INTERVAL, Integer.toString(DEFAULT_UPDATE_INTERVAL)));
 
-        CollectorFactory collectorFactory = new CollectorFactory(args[0]);
+        MonitoringDataProcessor monitoringDataProcessor = new AgronaMonitoringDataProcessor(args[0]);
 
         // Waits until the metrics file is created by the producer (e.g. this app is started and then waits for a
         // gateway to start and create the file)
         try {
-            while (!collectorFactory.initialize()) {
+            while (!monitoringDataProcessor.initialize()) {
                 try {
                     Thread.sleep(updateInterval);
                 } catch (InterruptedException e) {
                     LOGGER.debug("An InterruptedException was caught while trying to initialize metricsCollector: ", e);
-                    if (!collectorFactory.initialize()) {
+                    if (!monitoringDataProcessor.initialize()) {
                         System.exit(1);
                     }
                 }
@@ -81,9 +83,9 @@ public class MainApp {
             LOGGER.error("There was a problem with the metrics.reader configuration file. Exiting application.");
         }
 
-        MetricsCollector metricsCollector = collectorFactory.getMetricsCollector();
+        MMFReader reader = monitoringDataProcessor.getMMFReader();
 
-        if (metricsCollector == null) {
+        if (reader == null) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
             System.exit(1);
         }
@@ -95,10 +97,17 @@ public class MainApp {
             final StatsdPublisher client = new StatsdPublisher(hostname, port);
 
             taskExecutor.scheduleAtFixedRate(() -> {
-                // Gets the list of all metrics and sends it to the StatsD publisher
-                    for (Metric metric : metricsCollector.getMetrics()) {
-                        // c - simple counter for StatsD
-                        client.send(String.format(Locale.ENGLISH, "%s:%s|c", metric.getName(), metric.getValue()));
+                // Gets the list of all existing services
+                    for (ServiceCounters service : reader.getServices()) {
+                        // Gets the list of all counters for a given service and sends them to the StatsD publisher
+                        for (Counter counter : reader.getServiceCounters(service)) {
+                            // c - simple counter for StatsD
+                            client.send(String.format(Locale.ENGLISH, "%s:%s|c", counter.getLabel(), counter.getValue()));
+                        }
+                    }
+                    // Gets the list of all gateway counters and sends them to the StatsD publisher
+                    for (Counter counter : reader.getGatewayCounters()) {
+                        client.send(String.format(Locale.ENGLISH, "%s:%s|c", counter.getLabel(), counter.getValue()));
                     }
                 }, 0, updateInterval, TimeUnit.MILLISECONDS);
         } catch (Exception e) {

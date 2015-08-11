@@ -19,28 +19,23 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.impl;
+package org.kaazing.monitoring.reader.api;
 
-import org.kaazing.monitoring.reader.api.Metric;
+import java.util.List;
 
-public class MetricImpl implements Metric {
+/**
+ * This interface is used for collecting gateway data and counters
+ */
+public interface GatewayCounters {
+    /**
+     * Returns the gateway id
+     * @return String
+     */
+    String getGatewayId();
 
-    private String name;
-    private long value;
-
-    public MetricImpl(String name, long value) {
-        this.name = name;
-        this.value = value;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public long getValue() {
-        return value;
-    }
-
+    /**
+     * Returns a list with all the collected gateway counters
+     * @return List<Counter>
+     */
+    List<Counter> getCounters();
 }

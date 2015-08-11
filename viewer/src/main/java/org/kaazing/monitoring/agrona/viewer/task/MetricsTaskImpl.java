@@ -5,7 +5,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.kaazing.monitoring.agrona.viewer.MetricsViewer;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.api.MMFReader;
+import org.kaazing.monitoring.reader.api.ServiceCounters;
 
 /**
  * Implementation for the GetMetricsTask abstraction
@@ -13,16 +14,20 @@ import org.kaazing.monitoring.reader.api.MetricsCollector;
  * and adding them directly to the logger output.
  *
  */
-public class MetricsTaskImpl implements MetricsTask{
+public class MetricsTaskImpl implements MetricsTask {
     private String fileName;
     private ScheduledFuture<?> task;
 
-    public MetricsTaskImpl(String fileName, ScheduledExecutorService taskExecutor, MetricsCollector metricsCollector) {
+    public MetricsTaskImpl(String fileName, ScheduledExecutorService taskExecutor, MMFReader reader) {
         this.fileName = fileName;
         task = taskExecutor.scheduleAtFixedRate(() -> {
-            // metrics retrieved - log message directly added to the logger output for each metric (using default logging in metricsCollector.getMetrics() method)
-            metricsCollector.getMetrics();
-        }, 0, MetricsViewer.UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
+            // metrics retrieved - log message directly added to the logger output for each metric (using default
+            // logging in metricsCollector.getServiceCounters() method)
+                for (ServiceCounters service : reader.getServices()) {
+                    reader.getServiceCounters(service);
+                }
+                reader.getGatewayCounters();
+            }, 0, MetricsViewer.UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     @Override

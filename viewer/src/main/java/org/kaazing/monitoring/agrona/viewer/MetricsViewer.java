@@ -9,10 +9,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.kaazing.monitoring.agrona.viewer.task.MetricsTask;
 import org.kaazing.monitoring.agrona.viewer.task.MetricsTaskImpl;
-import org.kaazing.monitoring.reader.CollectorFactory;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.api.MMFReader;
+import org.kaazing.monitoring.reader.api.MonitoringDataProcessor;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
+import org.kaazing.monitoring.reader.impl.AgronaMonitoringDataProcessor;
 import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderAgronaImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,19 +123,19 @@ public class MetricsViewer {
      */
     private static void addMetricsCollector(String fileName, ScheduledExecutorService taskExecutor) {
         LOGGER.debug("Adding metrics collector for " + fileName);
-        CollectorFactory collector = new CollectorFactory(fileName);
+        MonitoringDataProcessor monitoringDataProcessor = new AgronaMonitoringDataProcessor(fileName);
         try {
-            collector.initialize();
+            monitoringDataProcessor.initialize();
         } catch (MetricsReaderException e) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
             System.exit(1);
         }
-        MetricsCollector metricsCollector = collector.getMetricsCollector();
-        if (metricsCollector == null) {
+        MMFReader reader = monitoringDataProcessor.getMMFReader();
+        if (reader == null) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
             System.exit(1);
         }
-        tasks.add(new MetricsTaskImpl(fileName, taskExecutor, metricsCollector));
+        tasks.add(new MetricsTaskImpl(fileName, taskExecutor, reader));
     }
 
     /**

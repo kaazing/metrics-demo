@@ -18,22 +18,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.kaazing.monitoring.reader;
 
-import org.junit.Test;
+package org.kaazing.monitoring.reader.api;
+
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 
-public class CollectorFactoryTest {
+/**
+ * This interface initializes the monitoring data
+ */
+public interface MonitoringDataProcessor {
 
-    @Test
-    public void testCollectorFactoryCanLoadConfig() throws Exception {
-        CollectorFactory collector = new CollectorFactory("test");
+    /**
+     * Initializes monitoring data
+     * @return boolean - returns true if the initialization was finished without any problem
+     * @throws MetricsReaderException
+     */
+    boolean initialize() throws MetricsReaderException;
 
-        try {
-            collector.initialize();
-        } catch (MetricsReaderException e) {
-            throw new AssertionError();
-        }
-    }
-
+    /**
+     * Returns a MMFReader instance
+     * @return MMFReader
+     */
+    MMFReader getMMFReader();
 }

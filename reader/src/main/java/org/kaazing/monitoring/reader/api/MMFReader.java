@@ -24,14 +24,39 @@ package org.kaazing.monitoring.reader.api;
 import java.util.List;
 
 /**
- * This interface is used for collecting metrics
+ * This interface is used for reading data from the MMF
  */
-public interface MetricsCollector {
+public interface MMFReader {
 
     /**
-     * Returns a list with all the collected metrics
-     * @return List<Metric>
+     * Returns the gateway id
+     * @return String
      */
-    List<Counter> getCounters();
+    String getGatewayId();
+
+    /**
+     * Returns the MMF's version
+     * @return int
+     */
+    int getFileVersion();
+
+    /**
+     * Returns a list with all the collected gateway counters
+     * @return List<Counter>
+     */
+    List<Counter> getGatewayCounters();
+
+    /**
+     * Returns a list with all the existing services
+     * @return List<Service>
+     */
+    List<ServiceCounters> getServices();
+
+    /**
+     * Returns a list with all the collected service counters for a given service
+     * @param service
+     * @return List<Counter>
+     */
+    List<Counter> getServiceCounters(ServiceCounters service);
 
 }

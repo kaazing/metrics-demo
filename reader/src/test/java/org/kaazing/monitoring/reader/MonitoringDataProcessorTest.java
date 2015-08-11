@@ -18,19 +18,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.kaazing.monitoring.reader.impl;
-import static org.junit.Assert.assertEquals;
+package org.kaazing.monitoring.reader;
 
 import org.junit.Test;
-import org.kaazing.monitoring.reader.api.Metric;
+import org.kaazing.monitoring.reader.api.MonitoringDataProcessor;
+import org.kaazing.monitoring.reader.exception.MetricsReaderException;
+import org.kaazing.monitoring.reader.impl.AgronaMonitoringDataProcessor;
 
-public class MetricImplTest {
+public class MonitoringDataProcessorTest {
 
     @Test
-    public void testMetric() {
-        Metric metric = new MetricImpl("test", 1);
-        assertEquals("test", metric.getName());
-        assertEquals(1, metric.getValue());
+    public void testMonitoringDataProcessorCanLoadConfig() throws Exception {
+        MonitoringDataProcessor collector = new AgronaMonitoringDataProcessor("test");
+
+        try {
+            collector.initialize();
+        } catch (MetricsReaderException e) {
+            throw new AssertionError();
+        }
     }
 
 }

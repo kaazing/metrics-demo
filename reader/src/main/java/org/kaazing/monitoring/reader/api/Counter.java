@@ -22,17 +22,17 @@
 package org.kaazing.monitoring.reader.api;
 
 /**
- * This interface represents the abstraction layer for metrics.
+ * This interface represents the abstraction layer for counters.
  */
-public interface Metric {
+public interface Counter {
     /**
-     * Returns the metric's name
+     * Returns the counter's name
      * @return String
      */
-    String getName();
+    String getLabel();
 
     /**
-     * Returns the metric's value
+     * Returns the counter's value
      * @return long
      */
     long getValue();

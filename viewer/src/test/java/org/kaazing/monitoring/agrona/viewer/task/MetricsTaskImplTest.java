@@ -34,7 +34,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Test;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.api.MMFReader;
 
 public class MetricsTaskImplTest {
 
@@ -45,18 +45,18 @@ public class MetricsTaskImplTest {
     @Test
     public void testGetFileName() {
         ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
-        MetricsCollector metricsCollector = context.mock(MetricsCollector.class);
+        MMFReader reader = context.mock(MMFReader.class);
         getScheduledTask(taskExecutor);
-        MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, metricsCollector);
+        MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, reader);
         assertEquals(FILE_NAME, task.getFileName());
     }
 
     @Test
     public void testCleanup() {
         ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
-        MetricsCollector metricsCollector = context.mock(MetricsCollector.class);
+        MMFReader reader = context.mock(MMFReader.class);
         getScheduledTask(taskExecutor);
-        MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, metricsCollector);
+        MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, reader);
         assertNotNull(task);
         task.cleanup();
     }

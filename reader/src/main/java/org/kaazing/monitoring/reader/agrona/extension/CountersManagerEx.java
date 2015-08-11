@@ -27,7 +27,7 @@ import uk.co.real_logic.agrona.concurrent.CountersManager;
 /**
  * Wrapper over Agrona's Counter Manager to extend its functionality
  * This class was created to expose a public getValue method for a given id, since the Agrona
- * standard implementation did not provide one 
+ * standard implementation did not provide one
  */
 public class CountersManagerEx extends CountersManager {
 
@@ -48,7 +48,7 @@ public class CountersManagerEx extends CountersManager {
      * Returns the counter value for a given id
      *
      * @param id for which the value should be provided.
-     * @return value of the counter. 
+     * @return value of the counter.
      */
     public Long getLongValueForId(int id) {
         int offset = CountersManager.counterOffset(id);

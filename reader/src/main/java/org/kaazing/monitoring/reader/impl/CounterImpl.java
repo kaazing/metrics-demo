@@ -19,19 +19,28 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.api;
+package org.kaazing.monitoring.reader.impl;
 
-import java.util.List;
+import org.kaazing.monitoring.reader.api.Counter;
 
-/**
- * This interface is used for collecting metrics
- */
-public interface MetricsCollector {
+public class CounterImpl implements Counter {
 
-    /**
-     * Returns a list with all the collected metrics
-     * @return List<Metric>
-     */
-    List<Counter> getCounters();
+    private String label;
+    private long value;
+
+    public CounterImpl(String label, long value) {
+        this.label = label;
+        this.value = value;
+    }
+
+    @Override
+    public String getLabel() {
+        return label;
+    }
+
+    @Override
+    public long getValue() {
+        return value;
+    }
 
 }

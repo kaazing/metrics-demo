@@ -18,38 +18,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.kaazing.monitoring.reader.agrona.extension;
-
+package org.kaazing.monitoring.reader.impl;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
+import org.kaazing.monitoring.reader.api.Counter;
 
-import uk.co.real_logic.agrona.concurrent.AtomicBuffer;
-
-public class CountersManagerExTest {
+public class CounterImplTest {
 
     @Test
-    public void getLongValueForIdShouldReturnCounterValue() {
-
-        Mockery context = new Mockery();
-
-        context.setImposteriser(ClassImposteriser.INSTANCE);
-
-        AtomicBuffer buffer = context.mock(AtomicBuffer.class);
-        context.checking(new Expectations() {{
-            oneOf(buffer).verifyAlignment();
-            oneOf(buffer).capacity();
-            oneOf(buffer).getLongVolatile(0);will(returnValue(new Long(0)));
-        }});
-
-        CountersManagerEx manager = new CountersManagerEx(buffer, buffer);
-        assertNotNull(manager);
-
-        assertEquals(manager.getLongValueForId(0).intValue(), 0);
+    public void testCounter() {
+        Counter metric = new CounterImpl("test", 1);
+        assertEquals("test", metric.getLabel());
+        assertEquals(1, metric.getValue());
     }
+
 }

@@ -21,38 +21,47 @@
 
 package org.kaazing.monitoring.reader.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.Counter;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.kaazing.monitoring.reader.api.GatewayCounters;
+import org.kaazing.monitoring.reader.api.MMFReader;
+import org.kaazing.monitoring.reader.api.ServiceCounters;
 
-public class MetricsCollectorAgrona implements MetricsCollector {
+public class MMFReaderImpl implements MMFReader {
 
-    private CountersManagerEx countersManager;
+    private GatewayCounters gateway;
+    private List<ServiceCounters> services;
+    private int fileVersion;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorAgrona.class);
-
-    public MetricsCollectorAgrona(CountersManagerEx countersManager) {
-        this.countersManager = countersManager;
+    public MMFReaderImpl(int fileVersion, GatewayCounters gateway, List<ServiceCounters> services) {
+        this.fileVersion = fileVersion;
+        this.gateway = gateway;
+        this.services = services;
     }
 
     @Override
-    public List<Counter> getCounters() {
-        List<Counter> counters = new ArrayList<Counter>();
+    public String getGatewayId() {
+        return gateway.getGatewayId();
+    }
 
-        countersManager.forEach((id, label) -> {
-            final long value = countersManager.getLongValueForId(id);
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(String.format("%3d: %,20d - %s", id, value, label));
-            }
+    @Override
+    public int getFileVersion() {
+        return fileVersion;
+    }
 
-            counters.add(new CounterImpl(label, value));
-        });
+    @Override
+    public List<ServiceCounters> getServices() {
+        return services;
+    }
 
-        return counters;
+    @Override
+    public List<Counter> getGatewayCounters() {
+        return gateway.getCounters();
+    }
+
+    @Override
+    public List<Counter> getServiceCounters(ServiceCounters service) {
+        return service.getCounters();
     }
 }

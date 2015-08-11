@@ -19,19 +19,34 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.api;
+package org.kaazing.monitoring.reader.impl;
 
 import java.util.List;
 
-/**
- * This interface is used for collecting metrics
- */
-public interface MetricsCollector {
+import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
+import org.kaazing.monitoring.reader.api.Counter;
+import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.api.ServiceCounters;
 
-    /**
-     * Returns a list with all the collected metrics
-     * @return List<Metric>
-     */
-    List<Counter> getCounters();
+public class ServiceCountersImpl implements ServiceCounters {
+
+    private String name;
+    private CountersManagerEx countersManager;
+
+    public ServiceCountersImpl(String name, CountersManagerEx countersManager) {
+        this.name = name;
+        this.countersManager = countersManager;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public List<Counter> getCounters() {
+        MetricsCollector metricsCollector = new MetricsCollectorAgrona(countersManager);
+        return metricsCollector.getCounters();
+    }
 
 }
