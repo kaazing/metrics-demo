@@ -9,7 +9,6 @@
     </parent>
 
     <artifactId>metrics.reader</artifactId>
-    <version>develop-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Kaazing Metrics Demo - reader</name>
