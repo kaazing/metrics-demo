@@ -21,31 +21,36 @@
 
 package org.kaazing.monitoring.reader.impl;
 
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.util.function.BiConsumer;
+
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.lib.legacy.ClassImposteriser;
+import org.junit.Test;
 import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
-import org.kaazing.monitoring.reader.api.Counter;
 import org.kaazing.monitoring.reader.api.GatewayCounters;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
 
-public class GatewayCountersImpl implements GatewayCounters {
+public class GatewayCountersImplTest {
 
-    private String gatewayId;
-    private CountersManagerEx countersManager;
+    private final static String GATEWAY_ID = "testId";
 
-    public GatewayCountersImpl(String gatewayId, CountersManagerEx countersManager) {
-        this.gatewayId = gatewayId;
-        this.countersManager = countersManager;
-    }
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGatewayCounters() {
 
-    @Override
-    public String getGatewayId() {
-        return gatewayId;
-    }
+        Mockery context = new Mockery();
+        context.setImposteriser(ClassImposteriser.INSTANCE);
 
-    @Override
-    public List<Counter> getCounters() {
-        MetricsCollector metricsCollector = new MetricsCollectorAgrona(countersManager);
-        return metricsCollector.getCounters();
+        CountersManagerEx countersManager = context.mock(CountersManagerEx.class);
+        context.checking(new Expectations() {{
+            oneOf(countersManager).forEach(with(aNonNull(BiConsumer.class)));
+        }});
+
+        GatewayCounters gatewayCounters = new GatewayCountersImpl(GATEWAY_ID, countersManager);
+        assertEquals(GATEWAY_ID, gatewayCounters.getGatewayId());
+        assertNotNull(gatewayCounters.getCounters());
     }
 }

@@ -40,6 +40,7 @@ import uk.co.real_logic.agrona.concurrent.SigInt;
 public class MainApp {
 
     private static final int DEFAULT_UPDATE_INTERVAL = 1000;
+    private static final String DEFAULT_SEPARATOR = ".";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
 
@@ -95,6 +96,7 @@ public class MainApp {
 
         try {
             final StatsdPublisher client = new StatsdPublisher(hostname, port);
+            String gatewayId = reader.getGatewayId();
 
             taskExecutor.scheduleAtFixedRate(() -> {
                 // Gets the list of all existing services
@@ -102,12 +104,15 @@ public class MainApp {
                         // Gets the list of all counters for a given service and sends them to the StatsD publisher
                         for (Counter counter : reader.getServiceCounters(service)) {
                             // c - simple counter for StatsD
-                            client.send(String.format(Locale.ENGLISH, "%s:%s|c", counter.getLabel(), counter.getValue()));
+                            String counterName =
+                                    gatewayId + DEFAULT_SEPARATOR + service.getName() + DEFAULT_SEPARATOR + counter.getLabel();
+                            client.send(String.format(Locale.ENGLISH, "%s:%s|c", counterName, counter.getValue()));
                         }
                     }
                     // Gets the list of all gateway counters and sends them to the StatsD publisher
                     for (Counter counter : reader.getGatewayCounters()) {
-                        client.send(String.format(Locale.ENGLISH, "%s:%s|c", counter.getLabel(), counter.getValue()));
+                        String counterName = gatewayId + DEFAULT_SEPARATOR + counter.getLabel();
+                        client.send(String.format(Locale.ENGLISH, "%s:%s|c", counterName, counter.getValue()));
                     }
                 }, 0, updateInterval, TimeUnit.MILLISECONDS);
         } catch (Exception e) {

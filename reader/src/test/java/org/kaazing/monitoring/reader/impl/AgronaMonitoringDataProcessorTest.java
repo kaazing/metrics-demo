@@ -18,21 +18,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.kaazing.monitoring.reader;
+package org.kaazing.monitoring.reader.impl;
 
 import org.junit.Test;
 import org.kaazing.monitoring.reader.api.MonitoringDataProcessor;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 import org.kaazing.monitoring.reader.impl.AgronaMonitoringDataProcessor;
 
-public class MonitoringDataProcessorTest {
+public class AgronaMonitoringDataProcessorTest {
 
     @Test
     public void testMonitoringDataProcessorCanLoadConfig() throws Exception {
-        MonitoringDataProcessor collector = new AgronaMonitoringDataProcessor("test");
+        MonitoringDataProcessor monitoringDataProcessor = new AgronaMonitoringDataProcessor("test");
 
         try {
-            collector.initialize();
+            monitoringDataProcessor.initialize();
         } catch (MetricsReaderException e) {
             throw new AssertionError();
         }
