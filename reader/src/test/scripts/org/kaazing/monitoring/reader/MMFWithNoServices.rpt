@@ -1,0 +1,15 @@
+# This script accepts a connection on port 8444 writes binary data to it 
+# corresponding to a valid metrics memory mapped file where the gateway
+# has no running services.
+
+accept tcp://127.0.0.1:8111
+accepted
+connected
+
+# version
+write 0x00 0x00 0x00 0x01
+
+# Etc (add appropriate file contents matching the MMF spec)
+
+close
+closed
