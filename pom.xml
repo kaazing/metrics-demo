@@ -27,6 +27,7 @@
         <junit.version>4.12</junit.version>
         <slf4j.version>1.7.5</slf4j.version>
         <agrona.version>0.3.1</agrona.version>
+        <k3po.version>2.0.0</k3po.version>
     </properties>
    
     <modules>
@@ -63,8 +64,43 @@
                 <artifactId>Agrona</artifactId>
                 <version>${agrona.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.kaazing</groupId>
+                <artifactId>k3po.lang</artifactId>
+                <version>${k3po.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.kaazing</groupId>
+                <artifactId>k3po.junit</artifactId>
+                <version>${k3po.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>      
     </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.kaazing</groupId>
+                    <artifactId>k3po-maven-plugin</artifactId>
+                    <version>${k3po.version}</version>
+                    <configuration>
+                        <skipTests>${skipITs}</skipTests>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>start</goal>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <profiles>
         <profile>
