@@ -2,14 +2,42 @@
 # corresponding to a valid metrics memory mapped file where the gateway
 # has no running services.
 
-accept tcp://127.0.0.1:8111
+accept tcp://127.0.0.1:8444
 accepted
 connected
 
-# version
-write 0x00 0x00 0x00 0x01
+### TODO: k3po will need to be enhanced to support "write int" (write int in native byte order)
+### For now this script is little endian and will not work on big endian system like SPARC 
 
-# Etc (add appropriate file contents matching the MMF spec)
+# version
+write [0x01 0x00 0x00 0x00]
+
+# gateway data offset (3*4=12)
+write [0x0c 0x00 0x00 0x00]
+
+# service mappings offset (10*4=40)
+write [0x28 0x00 0x00 0x00]
+
+# gateway data
+# - gateway ID
+write [0x04 0x00 0x00 0x00]
+write "gwy1"
+# - gateway counters (none)
+#   - label buffers offset (10*4=40)
+write [0x18 0x00 0x00 0x00]
+#   - label buffers length
+write [0x00 0x00 0x00 0x00]
+#   - value buffers offset (10*4=40)
+write [0x28 0x00 0x00 0x00]
+#   - value buffers length
+write [0x00 0x00 0x00 0x00]
+
+# Padding so value buffers offset can be multiple of 8 (needed for Agrona, see UnsafeBuffer.verifyAlignment)
+write [0x00 0x00 0x00 0x00]
+
+# service data (offset=40)
+# - number of services
+write [0x00 0x00 0x00 0x00]
 
 close
 closed

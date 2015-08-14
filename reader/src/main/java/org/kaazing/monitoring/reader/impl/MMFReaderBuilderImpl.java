@@ -73,7 +73,7 @@ public class MMFReaderBuilderImpl implements MMFReaderBuilder {
      * @param offset - offset from which to read the metadata
      */
     private void readMetadata(int offset) {
-        metaDataBuffer = new UnsafeBuffer(mappedByteBuffer, offset, METADATA_BUFFER_LENGTH);
+        metaDataBuffer = new UnsafeBuffer(mappedByteBuffer, offset, mappedByteBuffer.capacity());
 
         fileVersion = metaDataBuffer.getInt(offset);
         offset += SIZE_OF_INT;

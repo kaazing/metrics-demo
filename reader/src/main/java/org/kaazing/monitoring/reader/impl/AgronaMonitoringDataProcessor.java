@@ -23,6 +23,7 @@ package org.kaazing.monitoring.reader.impl;
 
 import java.io.File;
 import java.nio.MappedByteBuffer;
+import java.nio.file.Paths;
 
 import org.kaazing.monitoring.reader.api.MMFReader;
 import org.kaazing.monitoring.reader.api.MMFReaderBuilder;
@@ -81,8 +82,12 @@ public class AgronaMonitoringDataProcessor implements MonitoringDataProcessor {
      * @return MappedByteBuffer - the Agrona mapped file
      */
     private MappedByteBuffer getMappedFile() {
-        MonitoringFolderAgrona agronaFolder = new MonitoringFolderAgronaImpl();
-        File file = new File(agronaFolder.getMonitoringDir(), fileName);
+        File file = new File(fileName);
+        
+        if (!file.isAbsolute()) { 
+            MonitoringFolderAgrona agronaFolder = new MonitoringFolderAgronaImpl();
+            file = new File(agronaFolder.getMonitoringDir(), fileName);
+        }
 
         return IoUtil.mapExistingFile(file, fileName);
     }
