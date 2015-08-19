@@ -23,7 +23,6 @@ package org.kaazing.monitoring.reader.impl;
 
 import java.io.File;
 import java.nio.MappedByteBuffer;
-import java.nio.file.Paths;
 
 import org.kaazing.monitoring.reader.api.MMFReader;
 import org.kaazing.monitoring.reader.api.MMFReaderBuilder;

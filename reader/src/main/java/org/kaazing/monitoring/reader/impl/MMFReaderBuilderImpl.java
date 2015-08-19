@@ -37,7 +37,6 @@ import uk.co.real_logic.agrona.concurrent.UnsafeBuffer;
 
 public class MMFReaderBuilderImpl implements MMFReaderBuilder {
 
-    private static final int SIZE_OF_CHAR = BitUtil.SIZE_OF_CHAR;
     private static final int SIZE_OF_INT = BitUtil.SIZE_OF_INT;
     private static int METADATA_BUFFER_LENGTH = 64;
     private static final ByteOrder NATIVE_BYTE_ORDER = ByteOrder.nativeOrder();
@@ -60,7 +59,7 @@ public class MMFReaderBuilderImpl implements MMFReaderBuilder {
     public MMFReader build() {
         readMetadata(0);
 
-        CountersManagerEx countersManager = buildCountersManager(gatewayDataOffset + SIZE_OF_CHAR * gatewayId.length());
+        CountersManagerEx countersManager = buildCountersManager(gatewayDataOffset + gatewayId.length() + SIZE_OF_INT);
         GatewayCounters gateway = new GatewayCountersImpl(gatewayId, countersManager);
         List<ServiceCounters> services = getServices(serviceMappingsOffset);
 
@@ -100,7 +99,10 @@ public class MMFReaderBuilderImpl implements MMFReaderBuilder {
         int valuesBufferLength = metaDataBuffer.getInt(offset);
         offset += SIZE_OF_INT;
 
-        return createCountersManager(labelsBufferOffset, labelsBufferLength, valuesBufferOffset, valuesBufferLength);
+        if (labelsBufferLength != 0 && valuesBufferLength != 0) {
+            return createCountersManager(labelsBufferOffset, labelsBufferLength, valuesBufferOffset, valuesBufferLength);
+        }
+        return null;
     }
 
     /**
@@ -114,12 +116,12 @@ public class MMFReaderBuilderImpl implements MMFReaderBuilder {
         int numberOfServices = metaDataBuffer.getInt(offset);
         offset += SIZE_OF_INT;
 
-        for (int i = 1; i <= numberOfServices; i++) {
+        for (int i = 0; i < numberOfServices; i++) {
             CountersManagerEx countersManager;
             ServiceCounters service;
 
             String name = metaDataBuffer.getStringUtf8(offset, NATIVE_BYTE_ORDER);
-            offset += SIZE_OF_CHAR * name.length();
+            offset += name.length() + SIZE_OF_INT;
 
             int serviceOffset = metaDataBuffer.getInt(offset);
             offset += SIZE_OF_INT;

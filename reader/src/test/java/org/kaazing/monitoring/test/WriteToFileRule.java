@@ -16,7 +16,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 /**
- * Utility class which connects to a k3po process, read all the bytes written by the
+ * Utility class which connects to a k3po process, reads all the bytes written by the
  * k3po script, and writes them to a given file.
  *
  */
@@ -24,7 +24,7 @@ public class WriteToFileRule implements TestRule, Runnable {
     private final int port;
     private volatile AtomicReference<Exception> exception = new AtomicReference<Exception>();
     private final Path outputFile;
-    
+
     public WriteToFileRule(int port) {
         this.port = port;
         try {
@@ -46,11 +46,11 @@ public class WriteToFileRule implements TestRule, Runnable {
                 t.join(3000);
                 WriteToFileRule.this.cleanup();
                 Exception e = exception.get();
-                if ( e != null) {
+                if (e != null) {
                     throw e;
                 }
             }
-            
+
         };
     }
 
@@ -62,33 +62,30 @@ public class WriteToFileRule implements TestRule, Runnable {
             WriteToFileRule.this.exception.set(e);
         }
     }
-    
+
     public Path getOutputFile() {
         return outputFile;
     }
 
     private void writeScriptOutputToFile() throws Exception {
-        try(
-            OutputStream out = new FileOutputStream(outputFile.toString());
-            Socket socket = new Socket("localhost", port);
-            InputStream in = socket.getInputStream() 
-           ) {
-                socket.setSoTimeout(1000);
-                int b;
-                while ((b = in.read()) != -1) {
-                    out.write(b);;
+        try (OutputStream out = new FileOutputStream(outputFile.toString());
+                Socket socket = new Socket("localhost", port);
+                InputStream in = socket.getInputStream()) {
+            socket.setSoTimeout(1000);
+            int b;
+            while ((b = in.read()) != -1) {
+                out.write(b);
             }
             out.flush();
         }
     }
-    
+
     private void cleanup() {
         try {
             Files.delete(outputFile);
         } catch (IOException e) {
-            System.out.println(format("Unable to delete %s, Files.delete failed with exception %s",
-                    outputFile, e));
+            System.out.println(format("Unable to delete %s, Files.delete failed with exception %s", outputFile, e));
         }
     }
-    
+
 }

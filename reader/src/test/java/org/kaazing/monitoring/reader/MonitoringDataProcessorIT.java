@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.DisableOnDebug;
@@ -51,22 +52,21 @@ import org.kaazing.monitoring.test.WriteToFileRule;
  */
 public class MonitoringDataProcessorIT {
     private TestRule timeout = new DisableOnDebug(new Timeout(10, TimeUnit.SECONDS));
-    
+
     private K3poRule robot = new K3poRule();
-    
+
     private WriteToFileRule writer = new WriteToFileRule(8444);
-    
+
     @Rule
     public TestRule chain = outerRule(robot).around(writer).around(timeout);
-    
-    @Specification("MMFWithNoServices") // this is a reference to a .rpt script file
-                                        // you can open it by selecting the name and typing ctrl+r (open resource)
+
+    @Specification("MMFWithNoServices")
     @Test
     public void shouldReadFileWithNoServices() throws Exception {
         robot.finish();
         Path metricsFile = writer.getOutputFile();
         assertTrue(String.format("Metrics file %s should be found", metricsFile), Files.exists(metricsFile));
-        
+
         MonitoringDataProcessor monitoringDataProcessor = new AgronaMonitoringDataProcessor(metricsFile.toString());
         monitoringDataProcessor.initialize();
         MMFReader reader = monitoringDataProcessor.getMMFReader();
@@ -75,8 +75,22 @@ public class MonitoringDataProcessorIT {
         assertEquals(0, reader.getGatewayCounters().size());
         assertEquals(0, reader.getServices().size());
     }
-    
-    
-    
+
+    @Specification("MMFWithServices")
+    @Test
+    @Ignore("not ready yet")
+    public void shouldReadFileWithServices() throws Exception {
+        robot.finish();
+        Path metricsFile = writer.getOutputFile();
+        assertTrue(String.format("Metrics file %s should be found", metricsFile), Files.exists(metricsFile));
+
+        MonitoringDataProcessor monitoringDataProcessor = new AgronaMonitoringDataProcessor(metricsFile.toString());
+        monitoringDataProcessor.initialize();
+        MMFReader reader = monitoringDataProcessor.getMMFReader();
+        assertNotNull(reader);
+        assertEquals("gwy1", reader.getGatewayId());
+        assertEquals(0, reader.getGatewayCounters().size());
+        assertEquals(0, reader.getServices().size());
+    }
 
 }

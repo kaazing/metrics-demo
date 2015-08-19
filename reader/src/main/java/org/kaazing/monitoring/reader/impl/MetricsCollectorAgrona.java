@@ -44,14 +44,16 @@ public class MetricsCollectorAgrona implements MetricsCollector {
     public List<Counter> getCounters() {
         List<Counter> counters = new ArrayList<Counter>();
 
-        countersManager.forEach((id, label) -> {
-            final long value = countersManager.getLongValueForId(id);
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(String.format("%3d: %,20d - %s", id, value, label));
-            }
+        if (countersManager != null) {
+            countersManager.forEach((id, label) -> {
+                final long value = countersManager.getLongValueForId(id);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(String.format("%3d: %,20d - %s", id, value, label));
+                }
 
-            counters.add(new CounterImpl(label, value));
-        });
+                counters.add(new CounterImpl(label, value));
+            });
+        }
 
         return counters;
     }
