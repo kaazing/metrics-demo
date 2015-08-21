@@ -38,7 +38,6 @@ import uk.co.real_logic.agrona.concurrent.UnsafeBuffer;
 public class MMFReaderBuilderImpl implements MMFReaderBuilder {
 
     private static final int SIZE_OF_INT = BitUtil.SIZE_OF_INT;
-    private static int METADATA_BUFFER_LENGTH = 64;
     private static final ByteOrder NATIVE_BYTE_ORDER = ByteOrder.nativeOrder();
 
     private MappedByteBuffer mappedByteBuffer;

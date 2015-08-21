@@ -29,7 +29,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.DisableOnDebug;
@@ -78,7 +77,6 @@ public class MonitoringDataProcessorIT {
 
     @Specification("MMFWithServices")
     @Test
-    @Ignore("not ready yet")
     public void shouldReadFileWithServices() throws Exception {
         robot.finish();
         Path metricsFile = writer.getOutputFile();
@@ -90,7 +88,8 @@ public class MonitoringDataProcessorIT {
         assertNotNull(reader);
         assertEquals("gwy1", reader.getGatewayId());
         assertEquals(0, reader.getGatewayCounters().size());
-        assertEquals(0, reader.getServices().size());
+        assertEquals(2, reader.getServices().size());
+        assertEquals(3, reader.getServiceCounters(reader.getServices().get(0)).size());
     }
 
 }
