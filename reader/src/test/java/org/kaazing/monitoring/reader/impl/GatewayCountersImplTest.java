@@ -50,7 +50,7 @@ public class GatewayCountersImplTest {
         }});
 
         GatewayCounters gatewayCounters = new GatewayCountersImpl(GATEWAY_ID, countersManager);
-        assertEquals(GATEWAY_ID, gatewayCounters.getGatewayId());
+        assertEquals(GATEWAY_ID, gatewayCounters.getId());
         assertNotNull(gatewayCounters.getCounters());
     }
 }

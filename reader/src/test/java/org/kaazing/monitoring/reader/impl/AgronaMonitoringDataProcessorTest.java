@@ -21,7 +21,6 @@
 package org.kaazing.monitoring.reader.impl;
 
 import org.junit.Test;
-import org.kaazing.monitoring.reader.api.MonitoringDataProcessor;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 import org.kaazing.monitoring.reader.impl.AgronaMonitoringDataProcessor;
 

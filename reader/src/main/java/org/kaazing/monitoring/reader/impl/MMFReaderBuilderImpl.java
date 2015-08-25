@@ -29,7 +29,6 @@ import java.util.List;
 import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.GatewayCounters;
 import org.kaazing.monitoring.reader.api.MMFReader;
-import org.kaazing.monitoring.reader.api.MMFReaderBuilder;
 import org.kaazing.monitoring.reader.api.ServiceCounters;
 
 import uk.co.real_logic.agrona.BitUtil;

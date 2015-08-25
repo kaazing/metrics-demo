@@ -25,8 +25,6 @@ import java.io.File;
 import java.nio.MappedByteBuffer;
 
 import org.kaazing.monitoring.reader.api.MMFReader;
-import org.kaazing.monitoring.reader.api.MMFReaderBuilder;
-import org.kaazing.monitoring.reader.api.MonitoringDataProcessor;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
 import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderAgronaImpl;
@@ -42,7 +40,6 @@ public class AgronaMonitoringDataProcessor implements MonitoringDataProcessor {
     private boolean initialized;
 
     private MappedByteBuffer mappedFile;
-    private MMFReaderBuilder readerBuilder;
     private String fileName;
 
     public AgronaMonitoringDataProcessor(String fileName) {
@@ -59,7 +56,6 @@ public class AgronaMonitoringDataProcessor implements MonitoringDataProcessor {
 
         try {
             mappedFile = getMappedFile();
-            readerBuilder = new MMFReaderBuilderImpl(mappedFile);
             initialized = true;
         } catch (IllegalStateException e) {
             LOGGER.error(e.toString());
@@ -71,7 +67,7 @@ public class AgronaMonitoringDataProcessor implements MonitoringDataProcessor {
     @Override
     public MMFReader getMMFReader() {
         if (initialized) {
-            return readerBuilder.build();
+            return MMFReader.wrap(mappedFile);
         }
         return null;
     }

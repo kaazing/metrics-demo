@@ -21,42 +21,37 @@
 
 package org.kaazing.monitoring.reader.api;
 
+import java.nio.MappedByteBuffer;
 import java.util.List;
+
+import org.kaazing.monitoring.reader.impl.MMFReaderBuilderImpl;
 
 /**
  * This interface is used for reading data from the MMF
  */
 public interface MMFReader {
-
-    /**
-     * Returns the gateway id
-     * @return String
-     */
-    String getGatewayId();
+    
+    static MMFReader wrap(MappedByteBuffer buffer) {
+        return new MMFReaderBuilderImpl(buffer).build();
+    }
 
     /**
      * Returns the MMF's version
      * @return int
      */
-    int getFileVersion();
+    int getMetricsVersion();
 
     /**
-     * Returns a list with all the collected gateway counters
-     * @return List<Counter>
+     * Returns the gateway id
+     * @return String
      */
-    List<Counter> getGatewayCounters();
+    GatewayCounters getGateway();
+
 
     /**
      * Returns a list with all the existing services
      * @return List<Service>
      */
     List<ServiceCounters> getServices();
-
-    /**
-     * Returns a list with all the collected service counters for a given service
-     * @param service
-     * @return List<Counter>
-     */
-    List<Counter> getServiceCounters(ServiceCounters service);
 
 }

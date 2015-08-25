@@ -19,25 +19,18 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.api;
+package org.kaazing.monitoring.reader.impl;
 
-import org.kaazing.monitoring.reader.exception.MetricsReaderException;
+import org.kaazing.monitoring.reader.api.MMFReader;
 
 /**
- * This interface initializes the monitoring data
+ * This interface is used for building a MMFReader
  */
-public interface MonitoringDataProcessor {
+public interface MMFReaderBuilder {
 
     /**
-     * Initializes monitoring data
-     * @return boolean - returns true if the initialization was finished without any problem
-     * @throws MetricsReaderException
+     * Builds a MMFReader instance
      */
-    boolean initialize() throws MetricsReaderException;
+    MMFReader build();
 
-    /**
-     * Returns a MMFReader instance
-     * @return MMFReader
-     */
-    MMFReader getMMFReader();
 }

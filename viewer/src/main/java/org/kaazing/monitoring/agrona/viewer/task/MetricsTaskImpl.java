@@ -24,9 +24,9 @@ public class MetricsTaskImpl implements MetricsTask {
             // metrics retrieved - log message directly added to the logger output for each metric (using default
             // logging in metricsCollector.getServiceCounters() method)
                 for (ServiceCounters service : reader.getServices()) {
-                    reader.getServiceCounters(service);
+                    service.getCounters();
                 }
-                reader.getGatewayCounters();
+                reader.getGateway().getCounters();
             }, 0, MetricsViewer.UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
     }
 

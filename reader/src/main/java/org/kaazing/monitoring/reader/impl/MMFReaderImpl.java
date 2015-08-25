@@ -23,7 +23,6 @@ package org.kaazing.monitoring.reader.impl;
 
 import java.util.List;
 
-import org.kaazing.monitoring.reader.api.Counter;
 import org.kaazing.monitoring.reader.api.GatewayCounters;
 import org.kaazing.monitoring.reader.api.MMFReader;
 import org.kaazing.monitoring.reader.api.ServiceCounters;
@@ -41,27 +40,17 @@ public class MMFReaderImpl implements MMFReader {
     }
 
     @Override
-    public String getGatewayId() {
-        return gateway.getGatewayId();
+    public int getMetricsVersion() {
+        return fileVersion;
     }
 
     @Override
-    public int getFileVersion() {
-        return fileVersion;
+    public GatewayCounters getGateway() {
+        return gateway;
     }
 
     @Override
     public List<ServiceCounters> getServices() {
         return services;
-    }
-
-    @Override
-    public List<Counter> getGatewayCounters() {
-        return gateway.getCounters();
-    }
-
-    @Override
-    public List<Counter> getServiceCounters(ServiceCounters service) {
-        return service.getCounters();
     }
 }
