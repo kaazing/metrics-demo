@@ -89,7 +89,8 @@ public class MonitoringDataProcessorIT {
         assertEquals("gwy1", reader.getGateway().getGatewayId());
         assertEquals(0, reader.getGateway().getCounters().size());
         assertEquals(2, reader.getServices().size());
-        assertEquals(3, reader.getServices().get(0).getCounters());
+        assertEquals(3, reader.getServices().get(0).getCounters().size());
+        // TODO: verify the individual counters (counter1, etc)
     }
 
 }
