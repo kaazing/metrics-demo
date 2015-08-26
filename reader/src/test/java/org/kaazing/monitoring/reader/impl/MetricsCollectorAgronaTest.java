@@ -74,8 +74,8 @@ public class MetricsCollectorAgronaTest {
                 }
 
             });
-            oneOf(counterManager).getLongValueForId(0); will(returnValue(24L));
-            oneOf(counterManager).getLongValueForId(1); will(returnValue(48L));
+            allowing(counterManager).getLongValueForId(0); will(returnValue(24L));
+            allowing(counterManager).getLongValueForId(1); will(returnValue(48L));
         }});
         MetricsCollector collector = new MetricsCollectorAgrona(counterManager);
         List<Counter> metrics = collector.getCounters();

@@ -27,34 +27,32 @@ import java.util.List;
 import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.Counter;
 import org.kaazing.monitoring.reader.api.MetricsCollector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MetricsCollectorAgrona implements MetricsCollector {
 
-    private CountersManagerEx countersManager;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollectorAgrona.class);
+    private List<Counter> counters;
 
     public MetricsCollectorAgrona(CountersManagerEx countersManager) {
-        this.countersManager = countersManager;
+        createCountersList(countersManager);
     }
 
     @Override
     public List<Counter> getCounters() {
-        List<Counter> counters = new ArrayList<Counter>();
+        return counters;
+    }
+
+    /**
+     * Creates the counters list; this method is only called once, from the constructor, 
+     * so it doesn't cause a lot of garbage collection and reduce performance
+     * @param countersManager
+     */
+    private void createCountersList(CountersManagerEx countersManager) {
+        counters = new ArrayList<Counter>();
 
         if (countersManager != null) {
             countersManager.forEach((id, label) -> {
-                final long value = countersManager.getLongValueForId(id);
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug(String.format("%3d: %,20d - %s", id, value, label));
-                }
-
-                counters.add(new CounterImpl(label, value));
+                counters.add(new CounterImpl(label, id, countersManager));
             });
         }
-
-        return counters;
     }
 }

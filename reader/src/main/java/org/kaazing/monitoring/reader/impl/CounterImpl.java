@@ -21,16 +21,19 @@
 
 package org.kaazing.monitoring.reader.impl;
 
+import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.Counter;
 
 public class CounterImpl implements Counter {
 
     private String label;
-    private long value;
+    private int id;
+    private CountersManagerEx countersManager;
 
-    public CounterImpl(String label, long value) {
+    public CounterImpl(String label, int id, CountersManagerEx countersManager) {
         this.label = label;
-        this.value = value;
+        this.id = id;
+        this.countersManager = countersManager;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class CounterImpl implements Counter {
 
     @Override
     public long getValue() {
-        return value;
+        return countersManager.getLongValueForId(id);
     }
 
 }
