@@ -41,8 +41,6 @@ public class MMFReaderBuilderImpl implements MMFReaderBuilder {
 
     private MappedByteBuffer mappedByteBuffer;
 
-    private CountersManagerEx countersManager;
-
     private UnsafeBuffer metaDataBuffer;
 
     private int fileVersion;
@@ -54,6 +52,7 @@ public class MMFReaderBuilderImpl implements MMFReaderBuilder {
         this.mappedByteBuffer = mappedByteBuffer;
     }
 
+    @Override
     public Metrics build() {
         readMetadata(0);
 
@@ -146,7 +145,6 @@ public class MMFReaderBuilderImpl implements MMFReaderBuilder {
         UnsafeBuffer labelsBuffer = new UnsafeBuffer(mappedByteBuffer, labelsBufferOffset, labelsBufferLength);
         UnsafeBuffer valuesBuffer = new UnsafeBuffer(mappedByteBuffer, valuesBufferOffset, valuesBufferLength);
 
-        countersManager = new CountersManagerEx(labelsBuffer, valuesBuffer);
-        return countersManager;
+        return new CountersManagerEx(labelsBuffer, valuesBuffer);
     }
 }

@@ -21,16 +21,46 @@
 package org.kaazing.monitoring.reader.impl;
 import static org.junit.Assert.assertEquals;
 
+import java.util.function.BiConsumer;
+
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.api.Invocation;
+import org.jmock.lib.action.CustomAction;
+import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
+import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.Counter;
 
 public class CounterImplTest {
 
+    private static final String COUNTER1 = "counter1";
+
+    @SuppressWarnings("unchecked")
     @Test
     public void testCounter() {
-        Counter metric = new CounterImpl("test", 1);
-        assertEquals("test", metric.getLabel());
-        assertEquals(1, metric.getValue());
+        Mockery context = new Mockery();
+
+        context.setImposteriser(ClassImposteriser.INSTANCE);
+        CountersManagerEx countersManager = context.mock(CountersManagerEx.class);
+        context.checking(new Expectations() {{
+            oneOf(countersManager).forEach(with(aNonNull(BiConsumer.class)));
+            will(new CustomAction("report data") {
+
+                @Override
+                public Object invoke(Invocation arg0) throws Throwable {
+                    BiConsumer<Integer, String> visitor = (BiConsumer<Integer, String>)arg0.getParameter(0);
+                    visitor.accept(0, COUNTER1);
+                    return null;
+                }
+
+            });
+            oneOf(countersManager).getLongValueForId(0); will(returnValue(24L));
+        }});
+
+        Counter counter = new CounterImpl(COUNTER1, 0, countersManager);
+        assertEquals(COUNTER1, counter.getLabel());
+        assertEquals(24, counter.getValue());
     }
 
 }

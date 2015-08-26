@@ -105,12 +105,14 @@ public class MainApp {
                             // c - simple counter for StatsD
                             String counterName =
                                     gatewayId + DEFAULT_SEPARATOR + service.getName() + DEFAULT_SEPARATOR + counter.getLabel();
+                            LOGGER.debug("{} - {}", counter.getValue(), counterName);
                             client.send(String.format(Locale.ENGLISH, "%s:%s|c", counterName, counter.getValue()));
                         }
                     }
                     // Gets the list of all gateway counters and sends them to the StatsD publisher
                     for (Counter counter : reader.getGateway().getCounters()) {
                         String counterName = gatewayId + DEFAULT_SEPARATOR + counter.getLabel();
+                        LOGGER.debug("{} - {}", counter.getValue(), counterName);
                         client.send(String.format(Locale.ENGLISH, "%s:%s|c", counterName, counter.getValue()));
                     }
                 }, 0, updateInterval, TimeUnit.MILLISECONDS);

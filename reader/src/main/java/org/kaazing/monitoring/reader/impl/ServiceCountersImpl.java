@@ -30,11 +30,11 @@ import org.kaazing.monitoring.reader.api.ServiceCounters;
 public class ServiceCountersImpl implements ServiceCounters {
 
     private String name;
-    private CountersManagerEx countersManager;
+    private MetricsCollector metricsCollector;
 
     public ServiceCountersImpl(String name, CountersManagerEx countersManager) {
         this.name = name;
-        this.countersManager = countersManager;
+        this.metricsCollector = new MetricsCollectorAgrona(countersManager);
     }
 
     @Override
@@ -44,7 +44,6 @@ public class ServiceCountersImpl implements ServiceCounters {
 
     @Override
     public List<Counter> getCounters() {
-        MetricsCollector metricsCollector = new MetricsCollectorAgrona(countersManager);
         return metricsCollector.getCounters();
     }
 

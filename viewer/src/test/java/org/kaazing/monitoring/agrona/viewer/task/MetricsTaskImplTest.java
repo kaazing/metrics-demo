@@ -46,6 +46,9 @@ public class MetricsTaskImplTest {
     public void testGetFileName() {
         ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
         Metrics reader = context.mock(Metrics.class);
+        context.checking(new Expectations() {{
+            oneOf(reader).getGateway().getGatewayId();
+        }});
         getScheduledTask(taskExecutor);
         MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, reader);
         assertEquals(FILE_NAME, task.getFileName());
@@ -55,6 +58,9 @@ public class MetricsTaskImplTest {
     public void testCleanup() {
         ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
         Metrics reader = context.mock(Metrics.class);
+        context.checking(new Expectations() {{
+            oneOf(reader).getGateway().getGatewayId();
+        }});
         getScheduledTask(taskExecutor);
         MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, reader);
         assertNotNull(task);
@@ -112,7 +118,7 @@ public class MetricsTaskImplTest {
             }
         };
         context.checking(new Expectations() {{
-            oneOf(taskExecutor).scheduleAtFixedRate(with(any(Runnable.class)), with(any(Long.class)),  with(any(Long.class)),  with(any(TimeUnit.class)));
+            oneOf(taskExecutor).scheduleAtFixedRate(with(any(Runnable.class)), with(any(Long.class)), with(any(Long.class)), with(any(TimeUnit.class)));
             will(returnValue(sched));
         }});
         return sched;

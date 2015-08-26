@@ -30,11 +30,11 @@ import org.kaazing.monitoring.reader.api.GatewayCounters;
 public class GatewayCountersImpl implements GatewayCounters {
 
     private String gatewayId;
-    private CountersManagerEx countersManager;
+    private MetricsCollector metricsCollector;
 
     public GatewayCountersImpl(String gatewayId, CountersManagerEx countersManager) {
         this.gatewayId = gatewayId;
-        this.countersManager = countersManager;
+        this.metricsCollector = new MetricsCollectorAgrona(countersManager);
     }
 
     @Override
@@ -44,7 +44,6 @@ public class GatewayCountersImpl implements GatewayCounters {
 
     @Override
     public List<Counter> getCounters() {
-        MetricsCollector metricsCollector = new MetricsCollectorAgrona(countersManager);
         return metricsCollector.getCounters();
     }
 }
