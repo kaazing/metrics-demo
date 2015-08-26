@@ -36,9 +36,9 @@ import org.junit.rules.TestRule;
 import org.junit.rules.Timeout;
 import org.kaazing.k3po.junit.annotation.Specification;
 import org.kaazing.k3po.junit.rules.K3poRule;
-import org.kaazing.monitoring.reader.api.MMFReader;
-import org.kaazing.monitoring.reader.impl.AgronaMonitoringDataProcessor;
-import org.kaazing.monitoring.reader.impl.MonitoringDataProcessor;
+import org.kaazing.monitoring.reader.api.Metrics;
+import org.kaazing.monitoring.reader.api.MetricsFileProcessor;
+import org.kaazing.monitoring.reader.impl.MetricsFileProcessorImpl;
 import org.kaazing.monitoring.test.WriteToFileRule;
 
 /**
@@ -66,9 +66,9 @@ public class MonitoringDataProcessorIT {
         Path metricsFile = writer.getOutputFile();
         assertTrue(String.format("Metrics file %s should be found", metricsFile), Files.exists(metricsFile));
 
-        MonitoringDataProcessor monitoringDataProcessor = new AgronaMonitoringDataProcessor(metricsFile.toString());
+        MetricsFileProcessor monitoringDataProcessor = new MetricsFileProcessorImpl(metricsFile.toString());
         monitoringDataProcessor.initialize();
-        MMFReader reader = monitoringDataProcessor.getMMFReader();
+        Metrics reader = monitoringDataProcessor.getMMFReader();
         assertNotNull(reader);
         assertEquals("gwy1", reader.getGateway().getId());
         assertEquals(0, reader.getGateway().getCounters().size());
@@ -82,9 +82,9 @@ public class MonitoringDataProcessorIT {
         Path metricsFile = writer.getOutputFile();
         assertTrue(String.format("Metrics file %s should be found", metricsFile), Files.exists(metricsFile));
 
-        MonitoringDataProcessor monitoringDataProcessor = new AgronaMonitoringDataProcessor(metricsFile.toString());
+        MetricsFileProcessor monitoringDataProcessor = new MetricsFileProcessorImpl(metricsFile.toString());
         monitoringDataProcessor.initialize();
-        MMFReader reader = monitoringDataProcessor.getMMFReader();
+        Metrics reader = monitoringDataProcessor.getMMFReader();
         assertNotNull(reader);
         assertEquals("gwy1", reader.getGateway().getId());
         assertEquals(0, reader.getGateway().getCounters().size());

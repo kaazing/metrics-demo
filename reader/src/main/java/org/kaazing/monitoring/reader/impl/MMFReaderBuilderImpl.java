@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.GatewayCounters;
-import org.kaazing.monitoring.reader.api.MMFReader;
+import org.kaazing.monitoring.reader.api.Metrics;
 import org.kaazing.monitoring.reader.api.ServiceCounters;
 
 import uk.co.real_logic.agrona.BitUtil;
@@ -54,7 +54,7 @@ public class MMFReaderBuilderImpl implements MMFReaderBuilder {
         this.mappedByteBuffer = mappedByteBuffer;
     }
 
-    public MMFReader build() {
+    public Metrics build() {
         readMetadata(0);
 
         CountersManagerEx countersManager = buildCountersManager(gatewayDataOffset + gatewayId.length() + SIZE_OF_INT);

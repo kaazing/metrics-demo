@@ -24,10 +24,10 @@ package org.kaazing.monitoring.reader.impl;
 import java.util.List;
 
 import org.kaazing.monitoring.reader.api.GatewayCounters;
-import org.kaazing.monitoring.reader.api.MMFReader;
+import org.kaazing.monitoring.reader.api.Metrics;
 import org.kaazing.monitoring.reader.api.ServiceCounters;
 
-public class MMFReaderImpl implements MMFReader {
+public class MMFReaderImpl implements Metrics {
 
     private GatewayCounters gateway;
     private List<ServiceCounters> services;

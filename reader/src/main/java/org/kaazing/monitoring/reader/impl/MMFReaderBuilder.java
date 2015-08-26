@@ -21,7 +21,7 @@
 
 package org.kaazing.monitoring.reader.impl;
 
-import org.kaazing.monitoring.reader.api.MMFReader;
+import org.kaazing.monitoring.reader.api.Metrics;
 
 /**
  * This interface is used for building a MMFReader
@@ -31,6 +31,6 @@ public interface MMFReaderBuilder {
     /**
      * Builds a MMFReader instance
      */
-    MMFReader build();
+    Metrics build();
 
 }

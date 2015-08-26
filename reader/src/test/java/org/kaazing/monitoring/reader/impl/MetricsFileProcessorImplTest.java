@@ -21,14 +21,15 @@
 package org.kaazing.monitoring.reader.impl;
 
 import org.junit.Test;
+import org.kaazing.monitoring.reader.api.MetricsFileProcessor;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
-import org.kaazing.monitoring.reader.impl.AgronaMonitoringDataProcessor;
+import org.kaazing.monitoring.reader.impl.MetricsFileProcessorImpl;
 
-public class AgronaMonitoringDataProcessorTest {
+public class MetricsFileProcessorImplTest {
 
     @Test
     public void testMonitoringDataProcessorCanLoadConfig() throws Exception {
-        MonitoringDataProcessor monitoringDataProcessor = new AgronaMonitoringDataProcessor("test");
+        MetricsFileProcessor monitoringDataProcessor = new MetricsFileProcessorImpl("test");
 
         try {
             monitoringDataProcessor.initialize();

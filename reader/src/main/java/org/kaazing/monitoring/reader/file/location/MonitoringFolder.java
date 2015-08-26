@@ -19,26 +19,26 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.impl;
+package org.kaazing.monitoring.reader.file.location;
 
-import org.kaazing.monitoring.reader.api.MMFReader;
-import org.kaazing.monitoring.reader.exception.MetricsReaderException;
+import java.util.List;
 
 /**
- * This interface initializes the monitoring data
+ * This interface defines the Monitoring Folder Agrona abstraction
+ *
  */
-public interface MonitoringDataProcessor {
+public interface MonitoringFolder {
+    
+    /**
+     * Returns the monitoring files in the monitoring folder
+     * @return String
+     */
+    List<String> getMonitoringFiles();
 
     /**
-     * Initializes monitoring data
-     * @return boolean - returns true if the initialization was finished without any problem
-     * @throws MetricsReaderException
+     * Method returning monitoring directory
+     * @return
      */
-    boolean initialize() throws MetricsReaderException;
+    String getMonitoringDir();
 
-    /**
-     * Returns a MMFReader instance
-     * @return MMFReader
-     */
-    MMFReader getMMFReader();
 }

@@ -29,12 +29,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
-import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
-import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderAgronaImpl;
+import org.kaazing.monitoring.reader.file.location.MonitoringFolder;
+import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderImpl;
 
 import uk.co.real_logic.agrona.IoUtil;
 
-public class MonitoringFolderAgronaImplTest {
+public class MonitoringFolderImplTest {
     private static final String DEV_SHM = "/dev/shm";
     private static final String OS_NAME = "os.name";
     private static final String LINUX = "Linux";
@@ -43,7 +43,7 @@ public class MonitoringFolderAgronaImplTest {
 
     @Test
     public void getMonitoringFilesShouldReturnEmptyList() {
-        MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImplMonitoringDirMocked();
+        MonitoringFolder monitoringFolder = new MonitoringFolderAgronaImplMonitoringDirMocked();
         List<String> files = monitoringFolder.getMonitoringFiles();
         assertNotNull(files);
         //no monitoring files should be present by default
@@ -52,7 +52,7 @@ public class MonitoringFolderAgronaImplTest {
 
     @Test
     public void getMonitoringFilesShouldReturnNonEmptyList() {
-        MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImplMonitoringDirMocked();
+        MonitoringFolder monitoringFolder = new MonitoringFolderAgronaImplMonitoringDirMocked();
         String folder = monitoringFolder.getMonitoringDir();
         File directory = new File(folder);
         File file1 = new File(folder + "/test1");
@@ -82,7 +82,7 @@ public class MonitoringFolderAgronaImplTest {
 
     @Test
     public void getMonitoringDirShouldReturnConfiguredDirectoryNameInCorrectLocation() {
-        MonitoringFolderAgrona monitoringFolder = new MonitoringFolderAgronaImpl();
+        MonitoringFolder monitoringFolder = new MonitoringFolderImpl();
         String monitoringDir = "";
         if (LINUX.equals(System.getProperty(OS_NAME))) {
             monitoringDir = DEV_SHM + IoUtil.tmpDirName() + MONITORING_FILE_LOCATION;
@@ -93,7 +93,7 @@ public class MonitoringFolderAgronaImplTest {
         assertEquals(monitoringDir , monitoringFolder.getMonitoringDir());
     }
 
-    private class MonitoringFolderAgronaImplMonitoringDirMocked extends MonitoringFolderAgronaImpl {
+    private class MonitoringFolderAgronaImplMonitoringDirMocked extends MonitoringFolderImpl {
         @Override
         public String getMonitoringDir() {
             String prefix = "";

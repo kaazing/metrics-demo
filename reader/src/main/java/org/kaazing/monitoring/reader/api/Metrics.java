@@ -27,30 +27,36 @@ import java.util.List;
 import org.kaazing.monitoring.reader.impl.MMFReaderBuilderImpl;
 
 /**
- * This interface is used for reading data from the MMF
+ * This interface is used for reading data from the metrics data file
  */
-public interface MMFReader {
+public interface Metrics {
     
-    static MMFReader wrap(MappedByteBuffer buffer) {
+    /**
+     * Creates an object allowing gateway metrics to be read
+     * @param buffer  Memory mapped buffer over the metrics data file
+     * @return  A object allowing all Gateway and service metrics to be read 
+     *      repeatedly without causing garbage collection
+     */
+    static Metrics wrap(MappedByteBuffer buffer) {
         return new MMFReaderBuilderImpl(buffer).build();
     }
 
     /**
-     * Returns the MMF's version
+     * Returns the version of the metrics data file format
      * @return int
      */
     int getMetricsVersion();
 
     /**
-     * Returns the gateway id
+     * Returns an object giving access to Gateway level metrics
      * @return String
      */
     GatewayCounters getGateway();
 
 
     /**
-     * Returns a list with all the existing services
-     * @return List<Service>
+     * Returns a list of objects giving access to service-level metrics
+     * @return List<ServiceCounters>  List of service metrics objects
      */
     List<ServiceCounters> getServices();
 

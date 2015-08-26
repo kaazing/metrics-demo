@@ -24,7 +24,7 @@ package org.kaazing.monitoring.reader.api;
 import java.util.List;
 
 /**
- * This interface is used for collecting gateway data and counters
+ * This interface is used for reading gateway data and counters
  */
 public interface GatewayCounters {
     /**

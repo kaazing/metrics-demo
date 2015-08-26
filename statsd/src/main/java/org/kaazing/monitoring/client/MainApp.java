@@ -27,11 +27,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.kaazing.monitoring.reader.api.Counter;
-import org.kaazing.monitoring.reader.api.MMFReader;
+import org.kaazing.monitoring.reader.api.Metrics;
+import org.kaazing.monitoring.reader.api.MetricsFileProcessor;
 import org.kaazing.monitoring.reader.api.ServiceCounters;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
-import org.kaazing.monitoring.reader.impl.AgronaMonitoringDataProcessor;
-import org.kaazing.monitoring.reader.impl.MonitoringDataProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +64,7 @@ public class MainApp {
         int updateInterval =
                 Integer.parseInt(config.get(Configuration.CFG_UPDATE_INTERVAL, Integer.toString(DEFAULT_UPDATE_INTERVAL)));
 
-        MonitoringDataProcessor monitoringDataProcessor = new AgronaMonitoringDataProcessor(args[0]);
+        MetricsFileProcessor monitoringDataProcessor = MetricsFileProcessor.newInstance(args[0]);
 
         // Waits until the metrics file is created by the producer (e.g. this app is started and then waits for a
         // gateway to start and create the file)
@@ -84,7 +83,7 @@ public class MainApp {
             LOGGER.error("There was a problem with the metrics.reader configuration file. Exiting application.");
         }
 
-        MMFReader reader = monitoringDataProcessor.getMMFReader();
+        Metrics reader = monitoringDataProcessor.getMMFReader();
 
         if (reader == null) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
