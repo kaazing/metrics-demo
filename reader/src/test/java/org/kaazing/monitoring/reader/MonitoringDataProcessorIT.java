@@ -70,7 +70,7 @@ public class MonitoringDataProcessorIT {
         monitoringDataProcessor.initialize();
         Metrics reader = monitoringDataProcessor.getMMFReader();
         assertNotNull(reader);
-        assertEquals("gwy1", reader.getGateway().getId());
+        assertEquals("gwy1", reader.getGateway().getGatewayId());
         assertEquals(0, reader.getGateway().getCounters().size());
         assertEquals(0, reader.getServices().size());
     }
@@ -86,7 +86,7 @@ public class MonitoringDataProcessorIT {
         monitoringDataProcessor.initialize();
         Metrics reader = monitoringDataProcessor.getMMFReader();
         assertNotNull(reader);
-        assertEquals("gwy1", reader.getGateway().getId());
+        assertEquals("gwy1", reader.getGateway().getGatewayId());
         assertEquals(0, reader.getGateway().getCounters().size());
         assertEquals(2, reader.getServices().size());
         assertEquals(3, reader.getServices().get(0).getCounters());

@@ -31,7 +31,7 @@ public interface GatewayCounters {
      * Returns the gateway id
      * @return String
      */
-    String getId();
+    String getGatewayId();
 
     /**
      * Returns a list with all the collected gateway counters

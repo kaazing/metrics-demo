@@ -95,7 +95,7 @@ public class MainApp {
 
         try {
             final StatsdPublisher client = new StatsdPublisher(hostname, port);
-            String gatewayId = reader.getGateway().getId();
+            String gatewayId = reader.getGateway().getGatewayId();
 
             taskExecutor.scheduleAtFixedRate(() -> {
                 // Gets the list of all existing services

@@ -38,7 +38,7 @@ public class GatewayCountersImpl implements GatewayCounters {
     }
 
     @Override
-    public String getId() {
+    public String getGatewayId() {
         return gatewayId;
     }
 
