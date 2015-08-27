@@ -11,7 +11,7 @@
 
     <artifactId>metrics-demo</artifactId>
     <name>Kaazing Gateway Metrics Demos</name>
-    <version>develop-SNAPSHOT</version>
+    <version>1.0.0.2</version>
     <packaging>pom</packaging>
 
     <url>https://github.com/kaazing/metrics-demo</url>

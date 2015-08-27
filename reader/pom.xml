@@ -5,11 +5,11 @@
     <parent>
         <groupId>org.kaazing</groupId>
         <artifactId>metrics-demo</artifactId>
-        <version>develop-SNAPSHOT</version>
+        <version>1.0.0.2</version>
     </parent>
 
     <artifactId>metrics.reader</artifactId>
-    <version>develop-SNAPSHOT</version>
+    <version>1.0.0.2</version>
     <packaging>jar</packaging>
 
     <name>Kaazing Metrics Demo - reader</name>

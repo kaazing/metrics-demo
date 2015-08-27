@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.kaazing</groupId>
         <artifactId>metrics-demo</artifactId>
-        <version>develop-SNAPSHOT</version>
+        <version>1.0.0.2</version>
     </parent>
 
     <artifactId>metrics.viewer</artifactId>
-    <version>develop-SNAPSHOT</version>
+    <version>1.0.0.2</version>
     <name>Kaazing Metrics Demo - console viewer</name>
     <description>Sample metrics console viewer application for Gateway monitoring</description>
 
