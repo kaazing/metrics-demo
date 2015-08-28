@@ -19,25 +19,21 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.api;
+package org.kaazing.monitoring.reader.impl;
 
-import org.kaazing.monitoring.reader.exception.MetricsReaderException;
+import java.util.List;
+
+import org.kaazing.monitoring.reader.api.Counter;
 
 /**
- * This interface initializes the monitoring data
+ * This interface is used for collecting metrics
  */
-public interface MonitoringDataProcessor {
+public interface MetricsCollector {
 
     /**
-     * Initializes monitoring data
-     * @return boolean - returns true if the initialization was finished without any problem
-     * @throws MetricsReaderException
+     * Returns a list with all the collected metrics
+     * @return List<Metric>
      */
-    boolean initialize() throws MetricsReaderException;
+    List<Counter> getCounters();
 
-    /**
-     * Returns a MMFReader instance
-     * @return MMFReader
-     */
-    MMFReader getMMFReader();
 }

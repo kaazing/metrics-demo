@@ -26,7 +26,6 @@ import java.util.List;
 import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.Counter;
 import org.kaazing.monitoring.reader.api.GatewayCounters;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
 
 public class GatewayCountersImpl implements GatewayCounters {
 

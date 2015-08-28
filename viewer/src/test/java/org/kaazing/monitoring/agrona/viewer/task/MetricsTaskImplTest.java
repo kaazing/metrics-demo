@@ -34,7 +34,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Test;
-import org.kaazing.monitoring.reader.api.MMFReader;
+import org.kaazing.monitoring.reader.api.Metrics;
 
 public class MetricsTaskImplTest {
 
@@ -45,9 +45,9 @@ public class MetricsTaskImplTest {
     @Test
     public void testGetFileName() {
         ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
-        MMFReader reader = context.mock(MMFReader.class);
+        Metrics reader = context.mock(Metrics.class);
         context.checking(new Expectations() {{
-            oneOf(reader).getGatewayId();
+            oneOf(reader).getGateway().getGatewayId();
         }});
         getScheduledTask(taskExecutor);
         MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, reader);
@@ -57,9 +57,9 @@ public class MetricsTaskImplTest {
     @Test
     public void testCleanup() {
         ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
-        MMFReader reader = context.mock(MMFReader.class);
+        Metrics reader = context.mock(Metrics.class);
         context.checking(new Expectations() {{
-            oneOf(reader).getGatewayId();
+            oneOf(reader).getGateway().getGatewayId();
         }});
         getScheduledTask(taskExecutor);
         MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, reader);

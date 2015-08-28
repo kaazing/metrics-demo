@@ -27,11 +27,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.kaazing.monitoring.reader.api.Counter;
-import org.kaazing.monitoring.reader.api.MMFReader;
-import org.kaazing.monitoring.reader.api.MonitoringDataProcessor;
+import org.kaazing.monitoring.reader.api.Metrics;
+import org.kaazing.monitoring.reader.api.MetricsFileProcessor;
 import org.kaazing.monitoring.reader.api.ServiceCounters;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
-import org.kaazing.monitoring.reader.impl.AgronaMonitoringDataProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +64,7 @@ public class MainApp {
         int updateInterval =
                 Integer.parseInt(config.get(Configuration.CFG_UPDATE_INTERVAL, Integer.toString(DEFAULT_UPDATE_INTERVAL)));
 
-        MonitoringDataProcessor monitoringDataProcessor = new AgronaMonitoringDataProcessor(args[0]);
+        MetricsFileProcessor monitoringDataProcessor = MetricsFileProcessor.newInstance(args[0]);
 
         // Waits until the metrics file is created by the producer (e.g. this app is started and then waits for a
         // gateway to start and create the file)
@@ -84,7 +83,7 @@ public class MainApp {
             LOGGER.error("There was a problem with the metrics.reader configuration file. Exiting application.");
         }
 
-        MMFReader reader = monitoringDataProcessor.getMMFReader();
+        Metrics reader = monitoringDataProcessor.getMMFReader();
 
         if (reader == null) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
@@ -96,13 +95,13 @@ public class MainApp {
 
         try {
             final StatsdPublisher client = new StatsdPublisher(hostname, port);
-            String gatewayId = reader.getGatewayId();
+            String gatewayId = reader.getGateway().getGatewayId();
 
             taskExecutor.scheduleAtFixedRate(() -> {
                 // Gets the list of all existing services
                     for (ServiceCounters service : reader.getServices()) {
                         // Gets the list of all counters for a given service and sends them to the StatsD publisher
-                        for (Counter counter : reader.getServiceCounters(service)) {
+                        for (Counter counter : service.getCounters()) {
                             // c - simple counter for StatsD
                             String counterName =
                                     gatewayId + DEFAULT_SEPARATOR + service.getName() + DEFAULT_SEPARATOR + counter.getLabel();
@@ -111,7 +110,7 @@ public class MainApp {
                         }
                     }
                     // Gets the list of all gateway counters and sends them to the StatsD publisher
-                    for (Counter counter : reader.getGatewayCounters()) {
+                    for (Counter counter : reader.getGateway().getCounters()) {
                         String counterName = gatewayId + DEFAULT_SEPARATOR + counter.getLabel();
                         LOGGER.debug("{} - {}", counter.getValue(), counterName);
                         client.send(String.format(Locale.ENGLISH, "%s:%s|c", counterName, counter.getValue()));

@@ -24,28 +24,26 @@ package org.kaazing.monitoring.reader.impl;
 import java.io.File;
 import java.nio.MappedByteBuffer;
 
-import org.kaazing.monitoring.reader.api.MMFReader;
-import org.kaazing.monitoring.reader.api.MMFReaderBuilder;
-import org.kaazing.monitoring.reader.api.MonitoringDataProcessor;
+import org.kaazing.monitoring.reader.api.Metrics;
+import org.kaazing.monitoring.reader.api.MetricsFileProcessor;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
-import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
-import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderAgronaImpl;
+import org.kaazing.monitoring.reader.file.location.MonitoringFolder;
+import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.co.real_logic.agrona.IoUtil;
 
-public class AgronaMonitoringDataProcessor implements MonitoringDataProcessor {
+public class MetricsFileProcessorImpl implements MetricsFileProcessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AgronaMonitoringDataProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsFileProcessorImpl.class);
 
     private boolean initialized;
 
     private MappedByteBuffer mappedFile;
-    private MMFReaderBuilder readerBuilder;
     private String fileName;
 
-    public AgronaMonitoringDataProcessor(String fileName) {
+    public MetricsFileProcessorImpl(String fileName) {
         this.fileName = fileName;
     }
 
@@ -59,7 +57,6 @@ public class AgronaMonitoringDataProcessor implements MonitoringDataProcessor {
 
         try {
             mappedFile = getMappedFile();
-            readerBuilder = new MMFReaderBuilderImpl(mappedFile);
             initialized = true;
         } catch (IllegalStateException e) {
             LOGGER.error(e.toString());
@@ -69,9 +66,9 @@ public class AgronaMonitoringDataProcessor implements MonitoringDataProcessor {
     }
 
     @Override
-    public MMFReader getMMFReader() {
+    public Metrics getMMFReader() {
         if (initialized) {
-            return readerBuilder.build();
+            return Metrics.wrap(mappedFile);
         }
         return null;
     }
@@ -84,7 +81,7 @@ public class AgronaMonitoringDataProcessor implements MonitoringDataProcessor {
         File file = new File(fileName);
         
         if (!file.isAbsolute()) { 
-            MonitoringFolderAgrona agronaFolder = new MonitoringFolderAgronaImpl();
+            MonitoringFolder agronaFolder = new MonitoringFolderImpl();
             file = new File(agronaFolder.getMonitoringDir(), fileName);
         }
 

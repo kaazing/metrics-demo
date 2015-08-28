@@ -19,19 +19,26 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.api;
+package org.kaazing.monitoring.reader.file.location;
 
 import java.util.List;
 
 /**
- * This interface is used for collecting metrics
+ * This interface defines the Monitoring Folder Agrona abstraction
+ *
  */
-public interface MetricsCollector {
+public interface MonitoringFolder {
+    
+    /**
+     * Returns the monitoring files in the monitoring folder
+     * @return String
+     */
+    List<String> getMonitoringFiles();
 
     /**
-     * Returns a list with all the collected metrics
-     * @return List<Metric>
+     * Method returning monitoring directory
+     * @return
      */
-    List<Counter> getCounters();
+    String getMonitoringDir();
 
 }

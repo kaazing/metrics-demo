@@ -26,19 +26,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kaazing.monitoring.reader.Configuration;
-import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
+import org.kaazing.monitoring.reader.file.location.MonitoringFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.co.real_logic.agrona.IoUtil;
 
-public class MonitoringFolderAgronaImpl implements MonitoringFolderAgrona {
+public class MonitoringFolderImpl implements MonitoringFolder {
     private static final String LINUX_OS = "Linux";
     private static final String OS_NAME_SYSTEM_PROPERTY = "os.name";
     private static final String LINUX_DEV_SHM_DIRECTORY = "/dev/shm";
     private static final Configuration config = new Configuration();
     private List<String> files = new ArrayList<String>();
-    private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringFolderAgronaImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringFolderImpl.class);
 
     @Override
     public List<String> getMonitoringFiles() {
