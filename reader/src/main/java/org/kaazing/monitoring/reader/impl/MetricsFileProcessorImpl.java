@@ -66,7 +66,7 @@ public class MetricsFileProcessorImpl implements MetricsFileProcessor {
     }
 
     @Override
-    public Metrics getMMFReader() {
+    public Metrics getMetrics() {
         if (initialized) {
             return Metrics.wrap(mappedFile);
         }
@@ -79,8 +79,8 @@ public class MetricsFileProcessorImpl implements MetricsFileProcessor {
      */
     private MappedByteBuffer getMappedFile() {
         File file = new File(fileName);
-        
-        if (!file.isAbsolute()) { 
+
+        if (!file.isAbsolute()) {
             MonitoringFolder agronaFolder = new MonitoringFolderImpl();
             file = new File(agronaFolder.getMonitoringDir(), fileName);
         }

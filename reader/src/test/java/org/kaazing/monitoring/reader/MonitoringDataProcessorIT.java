@@ -27,6 +27,7 @@ import static org.junit.rules.RuleChain.outerRule;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Rule;
@@ -36,8 +37,10 @@ import org.junit.rules.TestRule;
 import org.junit.rules.Timeout;
 import org.kaazing.k3po.junit.annotation.Specification;
 import org.kaazing.k3po.junit.rules.K3poRule;
+import org.kaazing.monitoring.reader.api.Counter;
 import org.kaazing.monitoring.reader.api.Metrics;
 import org.kaazing.monitoring.reader.api.MetricsFileProcessor;
+import org.kaazing.monitoring.reader.api.ServiceCounters;
 import org.kaazing.monitoring.reader.impl.MetricsFileProcessorImpl;
 import org.kaazing.monitoring.test.WriteToFileRule;
 
@@ -68,7 +71,7 @@ public class MonitoringDataProcessorIT {
 
         MetricsFileProcessor monitoringDataProcessor = new MetricsFileProcessorImpl(metricsFile.toString());
         monitoringDataProcessor.initialize();
-        Metrics reader = monitoringDataProcessor.getMMFReader();
+        Metrics reader = monitoringDataProcessor.getMetrics();
         assertNotNull(reader);
         assertEquals("gwy1", reader.getGateway().getGatewayId());
         assertEquals(0, reader.getGateway().getCounters().size());
@@ -84,13 +87,19 @@ public class MonitoringDataProcessorIT {
 
         MetricsFileProcessor monitoringDataProcessor = new MetricsFileProcessorImpl(metricsFile.toString());
         monitoringDataProcessor.initialize();
-        Metrics reader = monitoringDataProcessor.getMMFReader();
+        Metrics reader = monitoringDataProcessor.getMetrics();
         assertNotNull(reader);
         assertEquals("gwy1", reader.getGateway().getGatewayId());
         assertEquals(0, reader.getGateway().getCounters().size());
         assertEquals(2, reader.getServices().size());
-        assertEquals(3, reader.getServices().get(0).getCounters().size());
-        // TODO: verify the individual counters (counter1, etc)
+
+        ServiceCounters firstService = reader.getServices().get(0);
+        assertEquals(3, firstService.getCounters().size());
+
+        List<Counter> counters = firstService.getCounters();
+        assertEquals(1, counters.get(0).getValue());
+        assertEquals(2, counters.get(1).getValue());
+        assertEquals(3, counters.get(2).getValue());
     }
 
 }

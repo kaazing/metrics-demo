@@ -27,13 +27,13 @@ import org.kaazing.monitoring.reader.api.GatewayCounters;
 import org.kaazing.monitoring.reader.api.Metrics;
 import org.kaazing.monitoring.reader.api.ServiceCounters;
 
-public class MMFReaderImpl implements Metrics {
+public class MMFReader implements Metrics {
 
     private GatewayCounters gateway;
     private List<ServiceCounters> services;
     private int fileVersion;
 
-    public MMFReaderImpl(int fileVersion, GatewayCounters gateway, List<ServiceCounters> services) {
+    public MMFReader(int fileVersion, GatewayCounters gateway, List<ServiceCounters> services) {
         this.fileVersion = fileVersion;
         this.gateway = gateway;
         this.services = services;

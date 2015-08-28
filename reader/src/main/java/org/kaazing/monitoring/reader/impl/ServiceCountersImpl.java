@@ -26,6 +26,7 @@ import java.util.List;
 import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.Counter;
 import org.kaazing.monitoring.reader.api.ServiceCounters;
+import org.kaazing.monitoring.reader.interfaces.MetricsCollector;
 
 public class ServiceCountersImpl implements ServiceCounters {
 

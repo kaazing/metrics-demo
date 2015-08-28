@@ -28,7 +28,7 @@ import java.util.List;
  *
  */
 public interface MonitoringFolder {
-    
+
     /**
      * Returns the monitoring files in the monitoring folder
      * @return String

@@ -19,18 +19,21 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.impl;
+package org.kaazing.monitoring.reader.interfaces;
 
-import org.kaazing.monitoring.reader.api.Metrics;
+import java.util.List;
+
+import org.kaazing.monitoring.reader.api.Counter;
 
 /**
- * This interface is used for building a MMFReader
+ * This interface is used for collecting metrics
  */
-public interface MMFReaderBuilder {
+public interface MetricsCollector {
 
     /**
-     * Builds a MMFReader instance
+     * Returns a list with all the collected metrics
+     * @return List<Metric>
      */
-    Metrics build();
+    List<Counter> getCounters();
 
 }

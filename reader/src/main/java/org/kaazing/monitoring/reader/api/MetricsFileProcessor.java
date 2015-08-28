@@ -42,7 +42,7 @@ public interface MetricsFileProcessor {
 
     /**
      * Returns a MMFReader instance
-     * @return MMFReader
+     * @return Metrics
      */
-    Metrics getMMFReader();
+    Metrics getMetrics();
 }

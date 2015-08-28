@@ -64,17 +64,17 @@ public class MainApp {
         int updateInterval =
                 Integer.parseInt(config.get(Configuration.CFG_UPDATE_INTERVAL, Integer.toString(DEFAULT_UPDATE_INTERVAL)));
 
-        MetricsFileProcessor monitoringDataProcessor = MetricsFileProcessor.newInstance(args[0]);
+        MetricsFileProcessor metricsFileProcessor = MetricsFileProcessor.newInstance(args[0]);
 
         // Waits until the metrics file is created by the producer (e.g. this app is started and then waits for a
         // gateway to start and create the file)
         try {
-            while (!monitoringDataProcessor.initialize()) {
+            while (!metricsFileProcessor.initialize()) {
                 try {
                     Thread.sleep(updateInterval);
                 } catch (InterruptedException e) {
                     LOGGER.debug("An InterruptedException was caught while trying to initialize metricsCollector: ", e);
-                    if (!monitoringDataProcessor.initialize()) {
+                    if (!metricsFileProcessor.initialize()) {
                         System.exit(1);
                     }
                 }
@@ -83,7 +83,7 @@ public class MainApp {
             LOGGER.error("There was a problem with the metrics.reader configuration file. Exiting application.");
         }
 
-        Metrics reader = monitoringDataProcessor.getMMFReader();
+        Metrics reader = metricsFileProcessor.getMetrics();
 
         if (reader == null) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");

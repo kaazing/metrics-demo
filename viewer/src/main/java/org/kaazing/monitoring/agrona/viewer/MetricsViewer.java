@@ -13,7 +13,6 @@ import org.kaazing.monitoring.reader.api.Metrics;
 import org.kaazing.monitoring.reader.api.MetricsFileProcessor;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 import org.kaazing.monitoring.reader.file.location.MonitoringFolder;
-import org.kaazing.monitoring.reader.impl.MetricsFileProcessorImpl;
 import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +79,10 @@ public class MetricsViewer {
            // Get new monitoring files list
             List<String> files = agronaFolder.getMonitoringFiles();
 
-            updatescheduledTasksBasedOnFiles(files, taskExecutor);
+            if(files.size() == 0) {
+                LOGGER.debug("No monitoring MMF found. Waiting for gateway instances..");
+            }
+            updateScheduledTasksBasedOnFiles(files, taskExecutor);
         }, 0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
@@ -89,7 +91,7 @@ public class MetricsViewer {
      * @param files
      * @param taskExecutor 
      */
-    private static void updatescheduledTasksBasedOnFiles(List<String> files, ScheduledExecutorService taskExecutor) {
+    private static void updateScheduledTasksBasedOnFiles(List<String> files, ScheduledExecutorService taskExecutor) {
         if (alreadyExistingFiles.size() == 0) {
             //Add tasks for all found monitoring files
             for (int i = 0; i < files.size(); i++) {
@@ -123,14 +125,14 @@ public class MetricsViewer {
      */
     private static void addMetricsCollector(String fileName, ScheduledExecutorService taskExecutor) {
         LOGGER.debug("Adding metrics collector for " + fileName);
-        MetricsFileProcessor monitoringDataProcessor = new MetricsFileProcessorImpl(fileName);
+        MetricsFileProcessor metricsFileProcessor = MetricsFileProcessor.newInstance(fileName);
         try {
-            monitoringDataProcessor.initialize();
+            metricsFileProcessor.initialize();
         } catch (MetricsReaderException e) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
             System.exit(1);
         }
-        Metrics reader = monitoringDataProcessor.getMMFReader();
+        Metrics reader = metricsFileProcessor.getMetrics();
         if (reader == null) {
             LOGGER.error("There was a problem initializing the metrics reader. Exiting application.");
             System.exit(1);

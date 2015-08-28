@@ -30,11 +30,11 @@ import org.kaazing.monitoring.reader.impl.MMFReaderBuilderImpl;
  * This interface is used for reading data from the metrics data file
  */
 public interface Metrics {
-    
+
     /**
      * Creates an object allowing gateway metrics to be read
-     * @param buffer  Memory mapped buffer over the metrics data file
-     * @return  A object allowing all Gateway and service metrics to be read 
+     * @param buffer Memory mapped buffer over the metrics data file
+     * @return An object allowing all Gateway and service metrics to be read 
      *      repeatedly without causing garbage collection
      */
     static Metrics wrap(MappedByteBuffer buffer) {
@@ -52,7 +52,6 @@ public interface Metrics {
      * @return String
      */
     GatewayCounters getGateway();
-
 
     /**
      * Returns a list of objects giving access to service-level metrics

@@ -30,6 +30,7 @@ import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.GatewayCounters;
 import org.kaazing.monitoring.reader.api.Metrics;
 import org.kaazing.monitoring.reader.api.ServiceCounters;
+import org.kaazing.monitoring.reader.interfaces.MMFReaderBuilder;
 
 import uk.co.real_logic.agrona.BitUtil;
 import uk.co.real_logic.agrona.concurrent.UnsafeBuffer;
@@ -60,7 +61,7 @@ public class MMFReaderBuilderImpl implements MMFReaderBuilder {
         GatewayCounters gateway = new GatewayCountersImpl(gatewayId, countersManager);
         List<ServiceCounters> services = getServices(serviceMappingsOffset);
 
-        MMFReaderImpl reader = new MMFReaderImpl(fileVersion, gateway, services);
+        MMFReader reader = new MMFReader(fileVersion, gateway, services);
         return reader;
     }
 

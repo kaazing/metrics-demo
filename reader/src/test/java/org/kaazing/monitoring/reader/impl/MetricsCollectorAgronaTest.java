@@ -34,6 +34,7 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
 import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.Counter;
+import org.kaazing.monitoring.reader.interfaces.MetricsCollector;
 
 public class MetricsCollectorAgronaTest {
     private static final String COUNTER2 = "counter2";
