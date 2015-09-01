@@ -23,9 +23,11 @@ StatsD implementation of metrics collection from Agrona
 
    `cd metrics.statsd-develop-SNAPSHOT/bin`
 
-   Mac/Linux: `./metrics.statsd.start`
+   Mac/Linux: `./metrics.statsd.start GATEWAY_IDENTIFIER`
 
-   Windows: `metrics.statsd.start.bat`
+   Windows: `metrics.statsd.start.bat GATEWAY_IDENTIFIER`
 
-## Note
+## Notes
+Where GATEWAY_IDENTIFIER is an environment variable, representing the identifier of the gateway that needs monitoring.
+
 In order for the project to run, the "monitoring" alias must be mapped to a valid IP.
