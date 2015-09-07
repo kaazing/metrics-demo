@@ -18,22 +18,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.kaazing.monitoring.reader;
 
-import org.junit.Test;
-import org.kaazing.monitoring.reader.exception.MetricsReaderException;
+package org.kaazing.monitoring.reader.api;
 
-public class CollectorFactoryTest {
+import java.util.List;
 
-    @Test
-    public void testCollectorFactoryCanLoadConfig() throws Exception {
-        CollectorFactory collector = new CollectorFactory("test");
+/**
+ * This interface is used for reading gateway data and counters
+ */
+public interface GatewayCounters {
+    /**
+     * Returns the gateway id
+     * @return String
+     */
+    String getGatewayId();
 
-        try {
-            collector.initialize();
-        } catch (MetricsReaderException e) {
-            throw new AssertionError();
-        }
-    }
-
+    /**
+     * Returns a list with all the collected gateway counters
+     * @return List<Counter>
+     */
+    List<Counter> getCounters();
 }

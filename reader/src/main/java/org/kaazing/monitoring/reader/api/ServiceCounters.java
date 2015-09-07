@@ -19,37 +19,23 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader;
+package org.kaazing.monitoring.reader.api;
 
-import java.io.File;
-import java.nio.MappedByteBuffer;
-
-import org.kaazing.monitoring.reader.file.location.MonitoringFolderAgrona;
-import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderAgronaImpl;
-
-import uk.co.real_logic.agrona.IoUtil;
+import java.util.List;
 
 /**
- * Processes the Agrona monitoring file
- *
+ * This interface is used for collecting service data and counters
  */
-public class FileProcessor {
-
-    private String fileName;
-    private static MonitoringFolderAgrona agronaFolder = new MonitoringFolderAgronaImpl();
-
-    public FileProcessor(String fileName) {
-        this.fileName = fileName;
-    }
+public interface ServiceCounters {
+    /**
+     * Returns the service's name
+     * @return String
+     */
+    String getName();
 
     /**
-     * Initializes and maps the Agrona monitoring file
-     * @return MappedByteBuffer - the Agrona mapped file
+     * Returns a list with all the current service counters
+     * @return List<Counter>
      */
-    public MappedByteBuffer getMappedFile() {
-        File file = new File(agronaFolder.getMonitoringDir(), fileName);
-
-        return IoUtil.mapExistingFile(file, fileName);
-    }
-
+    List<Counter> getCounters();
 }

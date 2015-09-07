@@ -19,39 +19,35 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader;
+package org.kaazing.monitoring.reader.impl;
 
+import java.io.File;
 import java.nio.MappedByteBuffer;
 
-import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.api.Metrics;
+import org.kaazing.monitoring.reader.api.MetricsFileProcessor;
 import org.kaazing.monitoring.reader.exception.MetricsReaderException;
-import org.kaazing.monitoring.reader.impl.MetricsCollectorAgrona;
+import org.kaazing.monitoring.reader.file.location.MonitoringFolder;
+import org.kaazing.monitoring.reader.impl.file.location.MonitoringFolderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Factory class that creates MetricsCollector or MessagesCollector instance
- */
-public class CollectorFactory {
+import uk.co.real_logic.agrona.IoUtil;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CollectorFactory.class);
+public class MetricsFileProcessorImpl implements MetricsFileProcessor {
 
-    private boolean initialized = false;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsFileProcessorImpl.class);
+
+    private boolean initialized;
 
     private MappedByteBuffer mappedFile;
-    private AgronaManagementFactory agronaManagementFactory;
     private String fileName;
 
-    public CollectorFactory(String fileName) {
+    public MetricsFileProcessorImpl(String fileName) {
         this.fileName = fileName;
     }
 
-    /**
-     * Initializes the Agrona monitoring file 
-     * @return boolean - returns true if the initialization was finished without any problem
-     * @throws MetricsReaderException
-     */
+    @Override
     public boolean initialize() throws MetricsReaderException {
 
         if (initialized) {
@@ -59,11 +55,8 @@ public class CollectorFactory {
             return initialized;
         }
 
-        FileProcessor fileProcessor = new FileProcessor(fileName);
-
         try {
-            mappedFile = fileProcessor.getMappedFile();
-            agronaManagementFactory = new AgronaManagementFactory(mappedFile);
+            mappedFile = getMappedFile();
             initialized = true;
         } catch (IllegalStateException e) {
             LOGGER.error(e.toString());
@@ -72,16 +65,26 @@ public class CollectorFactory {
         return initialized;
     }
 
-    /**
-     * Returns a MetricsCollector instance
-     * @return MetricsCollectorAgrona
-     */
-    public MetricsCollector getMetricsCollector() {
+    @Override
+    public Metrics getMetrics() {
         if (initialized) {
-            CountersManagerEx createCountersManager = agronaManagementFactory.createCountersManager();
-            return new MetricsCollectorAgrona(createCountersManager);
+            return Metrics.wrap(mappedFile);
         }
         return null;
     }
 
+    /**
+     * Initializes and maps the Agrona monitoring file
+     * @return MappedByteBuffer - the Agrona mapped file
+     */
+    private MappedByteBuffer getMappedFile() {
+        File file = new File(fileName);
+
+        if (!file.isAbsolute()) {
+            MonitoringFolder agronaFolder = new MonitoringFolderImpl();
+            file = new File(agronaFolder.getMonitoringDir(), fileName);
+        }
+
+        return IoUtil.mapExistingFile(file, fileName);
+    }
 }

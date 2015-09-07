@@ -18,19 +18,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.kaazing.monitoring.reader.impl;
-import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-import org.kaazing.monitoring.reader.api.Metric;
+import java.util.List;
 
-public class MetricImplTest {
+import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
+import org.kaazing.monitoring.reader.api.Counter;
+import org.kaazing.monitoring.reader.api.ServiceCounters;
+import org.kaazing.monitoring.reader.interfaces.MetricsCollector;
 
-    @Test
-    public void testMetric() {
-        Metric metric = new MetricImpl("test", 1);
-        assertEquals("test", metric.getName());
-        assertEquals(1, metric.getValue());
+public class ServiceCountersImpl implements ServiceCounters {
+
+    private String name;
+    private MetricsCollector metricsCollector;
+
+    public ServiceCountersImpl(String name, CountersManagerEx countersManager) {
+        this.name = name;
+        this.metricsCollector = new MetricsCollectorAgrona(countersManager);
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public List<Counter> getCounters() {
+        return metricsCollector.getCounters();
     }
 
 }

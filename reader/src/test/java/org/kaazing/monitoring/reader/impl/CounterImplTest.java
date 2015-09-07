@@ -18,38 +18,49 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.kaazing.monitoring.reader.agrona.extension;
-
+package org.kaazing.monitoring.reader.impl;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
+import java.util.function.BiConsumer;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.jmock.api.Invocation;
+import org.jmock.lib.action.CustomAction;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
+import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
+import org.kaazing.monitoring.reader.api.Counter;
 
-import uk.co.real_logic.agrona.concurrent.AtomicBuffer;
+public class CounterImplTest {
 
-public class CountersManagerExTest {
+    private static final String COUNTER1 = "counter1";
 
+    @SuppressWarnings("unchecked")
     @Test
-    public void getLongValueForIdShouldReturnCounterValue() {
-
+    public void testCounter() {
         Mockery context = new Mockery();
 
         context.setImposteriser(ClassImposteriser.INSTANCE);
-
-        AtomicBuffer buffer = context.mock(AtomicBuffer.class);
+        CountersManagerEx countersManager = context.mock(CountersManagerEx.class);
         context.checking(new Expectations() {{
-            oneOf(buffer).verifyAlignment();
-            oneOf(buffer).capacity();
-            oneOf(buffer).getLongVolatile(0);will(returnValue(new Long(0)));
+            oneOf(countersManager).forEach(with(aNonNull(BiConsumer.class)));
+            will(new CustomAction("report data") {
+
+                @Override
+                public Object invoke(Invocation arg0) throws Throwable {
+                    BiConsumer<Integer, String> visitor = (BiConsumer<Integer, String>)arg0.getParameter(0);
+                    visitor.accept(0, COUNTER1);
+                    return null;
+                }
+
+            });
+            oneOf(countersManager).getLongValueForId(0); will(returnValue(24L));
         }});
 
-        CountersManagerEx manager = new CountersManagerEx(buffer, buffer);
-        assertNotNull(manager);
-
-        assertEquals(manager.getLongValueForId(0).intValue(), 0);
+        Counter counter = new CounterImpl(COUNTER1, 0, countersManager);
+        assertEquals(COUNTER1, counter.getLabel());
+        assertEquals(24, counter.getValue());
     }
+
 }

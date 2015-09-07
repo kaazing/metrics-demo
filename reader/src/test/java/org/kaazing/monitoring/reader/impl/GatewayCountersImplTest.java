@@ -19,37 +19,38 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.agrona.extension;
+package org.kaazing.monitoring.reader.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.function.BiConsumer;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Test;
+import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
+import org.kaazing.monitoring.reader.api.GatewayCounters;
 
-import uk.co.real_logic.agrona.concurrent.AtomicBuffer;
+public class GatewayCountersImplTest {
 
-public class CountersManagerExTest {
+    private final static String GATEWAY_ID = "testId";
 
+    @SuppressWarnings("unchecked")
     @Test
-    public void getLongValueForIdShouldReturnCounterValue() {
+    public void testGatewayCounters() {
 
         Mockery context = new Mockery();
-
         context.setImposteriser(ClassImposteriser.INSTANCE);
 
-        AtomicBuffer buffer = context.mock(AtomicBuffer.class);
+        CountersManagerEx countersManager = context.mock(CountersManagerEx.class);
         context.checking(new Expectations() {{
-            oneOf(buffer).verifyAlignment();
-            oneOf(buffer).capacity();
-            oneOf(buffer).getLongVolatile(0);will(returnValue(new Long(0)));
+            oneOf(countersManager).forEach(with(aNonNull(BiConsumer.class)));
         }});
 
-        CountersManagerEx manager = new CountersManagerEx(buffer, buffer);
-        assertNotNull(manager);
-
-        assertEquals(manager.getLongValueForId(0).intValue(), 0);
+        GatewayCounters gatewayCounters = new GatewayCountersImpl(GATEWAY_ID, countersManager);
+        assertEquals(GATEWAY_ID, gatewayCounters.getGatewayId());
+        assertNotNull(gatewayCounters.getCounters());
     }
 }

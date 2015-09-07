@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>metrics.viewer</artifactId>
-    <version>develop-SNAPSHOT</version>
     <name>Kaazing Metrics Demo - console viewer</name>
     <description>Sample metrics console viewer application for Gateway monitoring</description>
 

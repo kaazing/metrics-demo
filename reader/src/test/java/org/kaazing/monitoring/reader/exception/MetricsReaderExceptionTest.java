@@ -23,7 +23,6 @@ package org.kaazing.monitoring.reader.exception;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.kaazing.monitoring.reader.exception.MetricsReaderException;
 
 public class MetricsReaderExceptionTest {
     private static final String MESSAGE = "test";

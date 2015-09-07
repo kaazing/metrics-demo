@@ -9,7 +9,6 @@
     </parent>
 
     <artifactId>metrics.reader</artifactId>
-    <version>develop-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Kaazing Metrics Demo - reader</name>
@@ -47,6 +46,11 @@
             <groupId>org.jmock</groupId>
             <artifactId>jmock-legacy</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.kaazing</groupId>
+            <artifactId>k3po.junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -58,6 +62,25 @@
                     <target>1.8</target>
                     <source>1.8</source>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.kaazing</groupId>
+                <artifactId>k3po-maven-plugin</artifactId>
+                <configuration>
+                    <skipTests>${skipITs}</skipTests>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>start</goal>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

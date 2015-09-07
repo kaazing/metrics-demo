@@ -34,7 +34,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Test;
-import org.kaazing.monitoring.reader.api.MetricsCollector;
+import org.kaazing.monitoring.reader.api.Metrics;
 
 public class MetricsTaskImplTest {
 
@@ -45,18 +45,24 @@ public class MetricsTaskImplTest {
     @Test
     public void testGetFileName() {
         ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
-        MetricsCollector metricsCollector = context.mock(MetricsCollector.class);
+        Metrics reader = context.mock(Metrics.class);
+        context.checking(new Expectations() {{
+            oneOf(reader).getGateway().getGatewayId();
+        }});
         getScheduledTask(taskExecutor);
-        MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, metricsCollector);
+        MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, reader);
         assertEquals(FILE_NAME, task.getFileName());
     }
 
     @Test
     public void testCleanup() {
         ScheduledExecutorService taskExecutor = context.mock(ScheduledExecutorService.class);
-        MetricsCollector metricsCollector = context.mock(MetricsCollector.class);
+        Metrics reader = context.mock(Metrics.class);
+        context.checking(new Expectations() {{
+            oneOf(reader).getGateway().getGatewayId();
+        }});
         getScheduledTask(taskExecutor);
-        MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, metricsCollector);
+        MetricsTask task = new MetricsTaskImpl(FILE_NAME, taskExecutor, reader);
         assertNotNull(task);
         task.cleanup();
     }
@@ -112,7 +118,7 @@ public class MetricsTaskImplTest {
             }
         };
         context.checking(new Expectations() {{
-            oneOf(taskExecutor).scheduleAtFixedRate(with(any(Runnable.class)), with(any(Long.class)),  with(any(Long.class)),  with(any(TimeUnit.class)));
+            oneOf(taskExecutor).scheduleAtFixedRate(with(any(Runnable.class)), with(any(Long.class)), with(any(Long.class)), with(any(TimeUnit.class)));
             will(returnValue(sched));
         }});
         return sched;

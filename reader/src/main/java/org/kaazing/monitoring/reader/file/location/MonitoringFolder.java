@@ -19,28 +19,26 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.impl;
+package org.kaazing.monitoring.reader.file.location;
 
-import org.kaazing.monitoring.reader.api.Metric;
+import java.util.List;
 
-public class MetricImpl implements Metric {
+/**
+ * This interface defines the Monitoring Folder Agrona abstraction
+ *
+ */
+public interface MonitoringFolder {
 
-    private String name;
-    private long value;
+    /**
+     * Returns the monitoring files in the monitoring folder
+     * @return String
+     */
+    List<String> getMonitoringFiles();
 
-    public MetricImpl(String name, long value) {
-        this.name = name;
-        this.value = value;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public long getValue() {
-        return value;
-    }
+    /**
+     * Method returning monitoring directory
+     * @return
+     */
+    String getMonitoringDir();
 
 }

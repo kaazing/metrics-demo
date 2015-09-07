@@ -19,19 +19,38 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.api;
+package org.kaazing.monitoring.reader.impl;
 
 import java.util.List;
 
-/**
- * This interface is used for collecting metrics
- */
-public interface MetricsCollector {
+import org.kaazing.monitoring.reader.api.GatewayCounters;
+import org.kaazing.monitoring.reader.api.Metrics;
+import org.kaazing.monitoring.reader.api.ServiceCounters;
 
-    /**
-     * Returns a list with all the collected metrics
-     * @return List<Metric>
-     */
-    List<Metric> getMetrics();
+public class MMFReader implements Metrics {
 
+    private GatewayCounters gateway;
+    private List<ServiceCounters> services;
+    private int fileVersion;
+
+    public MMFReader(int fileVersion, GatewayCounters gateway, List<ServiceCounters> services) {
+        this.fileVersion = fileVersion;
+        this.gateway = gateway;
+        this.services = services;
+    }
+
+    @Override
+    public int getMetricsVersion() {
+        return fileVersion;
+    }
+
+    @Override
+    public GatewayCounters getGateway() {
+        return gateway;
+    }
+
+    @Override
+    public List<ServiceCounters> getServices() {
+        return services;
+    }
 }

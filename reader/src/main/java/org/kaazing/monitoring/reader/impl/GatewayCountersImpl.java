@@ -19,25 +19,32 @@
  * under the License.
  */
 
-package org.kaazing.monitoring.reader.file.location;
+package org.kaazing.monitoring.reader.impl;
 
 import java.util.List;
 
-/**
- * This interface defines the Monitoring Folder Agrona abstraction
- *
- */
-public interface MonitoringFolderAgrona {
-    /**
-     * Returns the monitoring files in the monitoring folder
-     * @return String
-     */
-    List<String> getMonitoringFiles();
+import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
+import org.kaazing.monitoring.reader.api.Counter;
+import org.kaazing.monitoring.reader.api.GatewayCounters;
+import org.kaazing.monitoring.reader.interfaces.MetricsCollector;
 
-    /**
-     * Method returning monitoring directory
-     * @return
-     */
-    String getMonitoringDir();
+public class GatewayCountersImpl implements GatewayCounters {
 
+    private String gatewayId;
+    private MetricsCollector metricsCollector;
+
+    public GatewayCountersImpl(String gatewayId, CountersManagerEx countersManager) {
+        this.gatewayId = gatewayId;
+        this.metricsCollector = new MetricsCollectorAgrona(countersManager);
+    }
+
+    @Override
+    public String getGatewayId() {
+        return gatewayId;
+    }
+
+    @Override
+    public List<Counter> getCounters() {
+        return metricsCollector.getCounters();
+    }
 }

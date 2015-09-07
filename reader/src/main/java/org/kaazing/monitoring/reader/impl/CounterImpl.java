@@ -21,38 +21,29 @@
 
 package org.kaazing.monitoring.reader.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
 import org.kaazing.monitoring.reader.api.Counter;
-import org.kaazing.monitoring.reader.interfaces.MetricsCollector;
 
-public class MetricsCollectorAgrona implements MetricsCollector {
+public class CounterImpl implements Counter {
 
-    private List<Counter> counters;
+    private String label;
+    private int id;
+    private CountersManagerEx countersManager;
 
-    public MetricsCollectorAgrona(CountersManagerEx countersManager) {
-        createCountersList(countersManager);
+    public CounterImpl(String label, int id, CountersManagerEx countersManager) {
+        this.label = label;
+        this.id = id;
+        this.countersManager = countersManager;
     }
 
     @Override
-    public List<Counter> getCounters() {
-        return counters;
+    public String getLabel() {
+        return label;
     }
 
-    /**
-     * Creates the counters list; this method is only called once, from the constructor, 
-     * so it doesn't cause a lot of garbage collection and reduce performance
-     * @param countersManager
-     */
-    private void createCountersList(CountersManagerEx countersManager) {
-        counters = new ArrayList<Counter>();
-
-        if (countersManager != null) {
-            countersManager.forEach((id, label) -> {
-                counters.add(new CounterImpl(label, id, countersManager));
-            });
-        }
+    @Override
+    public long getValue() {
+        return countersManager.getLongValueForId(id);
     }
+
 }

@@ -9,7 +9,6 @@
     </parent>
 
     <artifactId>metrics.statsd</artifactId>
-    <version>develop-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Kaazing Metrics Demo - statsd publisher</name>

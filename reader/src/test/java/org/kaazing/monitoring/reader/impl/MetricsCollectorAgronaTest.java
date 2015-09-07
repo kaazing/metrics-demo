@@ -19,20 +19,22 @@
  * under the License.
  */
 package org.kaazing.monitoring.reader.impl;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import org.jmock.Expectations;
+import org.jmock.Mockery;
 import org.jmock.api.Invocation;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.action.CustomAction;
 import org.jmock.lib.legacy.ClassImposteriser;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
 import org.junit.Test;
 import org.kaazing.monitoring.reader.agrona.extension.CountersManagerEx;
-import org.kaazing.monitoring.reader.api.Metric;
+import org.kaazing.monitoring.reader.api.Counter;
+import org.kaazing.monitoring.reader.interfaces.MetricsCollector;
 
 public class MetricsCollectorAgronaTest {
     private static final String COUNTER2 = "counter2";
@@ -43,18 +45,20 @@ public class MetricsCollectorAgronaTest {
     @SuppressWarnings("unchecked")
     @Test
     public void getMetricsShouldReturnEmptyList() {
+
         context.setImposteriser(ClassImposteriser.INSTANCE);
         CountersManagerEx counterManager = context.mock(CountersManagerEx.class);
         context.checking(new Expectations() {{
             oneOf(counterManager).forEach(with(aNonNull(BiConsumer.class)));
         }});
-        MetricsCollectorAgrona collector = new MetricsCollectorAgrona(counterManager);
-        assertNotNull(collector.getMetrics());
+        MetricsCollector collector = new MetricsCollectorAgrona(counterManager);
+        assertNotNull(collector.getCounters());
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void getMetricsShouldReturnAvailableMetrics () {
+
         context.setImposteriser(ClassImposteriser.INSTANCE);
         CountersManagerEx counterManager = context.mock(CountersManagerEx.class);
         context.checking(new Expectations() {{
@@ -70,15 +74,15 @@ public class MetricsCollectorAgronaTest {
                 }
 
             });
-            oneOf(counterManager).getLongValueForId(0); will(returnValue(24L));
-            oneOf(counterManager).getLongValueForId(1); will(returnValue(48L));
+            allowing(counterManager).getLongValueForId(0); will(returnValue(24L));
+            allowing(counterManager).getLongValueForId(1); will(returnValue(48L));
         }});
-        MetricsCollectorAgrona collector = new MetricsCollectorAgrona(counterManager);
-        List<Metric> metrics = collector.getMetrics();
+        MetricsCollector collector = new MetricsCollectorAgrona(counterManager);
+        List<Counter> metrics = collector.getCounters();
         assertNotNull(metrics);
-        assertEquals(COUNTER1, metrics.get(0).getName());
+        assertEquals(COUNTER1, metrics.get(0).getLabel());
         assertEquals(24L, metrics.get(0).getValue());
-        assertEquals(COUNTER2, metrics.get(1).getName());
+        assertEquals(COUNTER2, metrics.get(1).getLabel());
         assertEquals(48L, metrics.get(1).getValue());
     }
 
